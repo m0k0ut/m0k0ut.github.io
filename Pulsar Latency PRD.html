@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRD: Reduce Pulsar Playground Inference Latency</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            background-color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .hero {
+            margin-bottom: 48px;
+            border-bottom: 2px solid #e0e6ed;
+            padding-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a2332;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 28px;
+            font-weight: 500;
+        }
+
+        .screenshot-section {
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #eef2f8 100%);
+            border: 1px solid #dfe7f0;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .screenshot-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 16px;
+        }
+
+        .screenshot-caption {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+
+        .callout {
+            background: #fff3cd;
+            border-left: 4px solid #ff6b6b;
+            padding: 20px 24px;
+            border-radius: 8px;
+            margin: 24px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #c41e3a;
+        }
+
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin: 32px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #eef2f8 100%);
+            border: 1px solid #dfe7f0;
+            border-radius: 10px;
+            padding: 20px 24px;
+            text-align: center;
+        }
+
+        .metric-card .label {
+            font-size: 0.9rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .metric-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a2332;
+            margin-bottom: 4px;
+        }
+
+        .metric-card .unit {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a2332;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e0e6ed;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 28px;
+            margin-bottom: 16px;
+        }
+
+        .subsection {
+            background: #f8f9fa;
+            border-left: 4px solid #0066cc;
+            padding: 20px 24px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+        }
+
+        .subsection p, .subsection li {
+            margin-bottom: 12px;
+            color: #2c3e50;
+            line-height: 1.7;
+        }
+
+        .subsection strong {
+            color: #1a2332;
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            color: #2c3e50;
+            line-height: 1.7;
+        }
+
+        .optimization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .opt-card {
+            background: #ffffff;
+            border: 1px solid #dfe7f0;
+            border-radius: 10px;
+            padding: 24px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .opt-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .opt-card .label {
+            display: inline-block;
+            background: #e7f1ff;
+            color: #0066cc;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .opt-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a2332;
+            margin-bottom: 12px;
+        }
+
+        .opt-card p {
+            font-size: 0.95rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .opt-card .tradeoff {
+            background: #fff5f5;
+            border-left: 3px solid #ff6b6b;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #c41e3a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.95rem;
+        }
+
+        table th {
+            background: #f5f7fa;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a2332;
+            border-bottom: 2px solid #dfe7f0;
+        }
+
+        table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e0e6ed;
+            color: #2c3e50;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .timeline-card {
+            background: linear-gradient(135deg, #e7f1ff 0%, #f0f8ff 100%);
+            border: 1px solid #bfd7e6;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .timeline-card .phase {
+            font-size: 0.85rem;
+            color: #0066cc;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .timeline-card .timeframe {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a2332;
+        }
+
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 2px solid #e0e6ed;
+            font-size: 0.9rem;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 4px 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .metric-row, .optimization-grid, .timeline-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            table th, table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>PRD: Reduce Pulsar Playground Inference Latency</h1>
+            <p class="subtitle">Accelerate Pulsar VLM inference to match cloud competitors, protect user confidence, and drive Playground adoption.</p>
+        </div>
+
+        <div class="screenshot-section">
+            <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/b5b73c5c-ae58-4639-bb8f-bcca1b42bf3e" alt="Pulsar Playground inference results showing latency comparison between Pulsar 1.0, Gemini 2.5 Pro, and GPT-5 Mini analyzing a Minneapolis shooting incident video">
+            <p class="screenshot-caption"><strong>Figure 1:</strong> Pulsar Playground live inference results on Minneapolis shooting incident video. Evidence captured in production Playground environment.</p>
+            <div class="callout">⚠️ <strong>Critical Finding:</strong> Pulsar VLM latency = <strong>41 seconds</strong> | Video: Minneapolis shooting incident</div>
+        </div>
+
+        <div class="metric-row">
+            <div class="metric-card">
+                <div class="label">Baseline p50</div>
+                <div class="value">41</div>
+                <div class="unit">seconds</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Target p50</div>
+                <div class="value">8–12</div>
+                <div class="unit">seconds</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Target p95</div>
+                <div class="value">&lt;20</div>
+                <div class="unit">seconds</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Improvement</div>
+                <div class="value">3.4×</div>
+                <div class="unit">faster</div>
+            </div>
+        </div>
+
+        <table style="margin-top: 40px;">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>p50 Latency</th>
+                    <th>Threats Detected</th>
+                    <th>Cost / Month</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Pulsar 1.0</strong></td>
+                    <td>41 seconds</td>
+                    <td>Police Presence, Brandishing Firearm, Assault/Fight, Collision/Near Miss, Smoke/Fire</td>
+                    <td>Edge ($0 cloud)</td>
+                </tr>
+                <tr>
+                    <td>Gemini 2.5 Pro</td>
+                    <td>9.77 seconds</td>
+                    <td>Limited threat context</td>
+                    <td>~$5,000</td>
+                </tr>
+                <tr>
+                    <td>GPT-5 Mini</td>
+                    <td>25.97 seconds</td>
+                    <td>Limited threat context</td>
+                    <td>~$1,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section">
+            <h2>1. Inference Optimization</h2>
+
+            <h3>Executive Summary</h3>
+            <div class="subsection">
+                <p>Pulsar Playground launched with industry-leading threat detection accuracy (81% on threat signature evaluation), but initial user testing reveals a latency gap: Pulsar VLM (41s) vs. Gemini 2.5 Pro (9.77s) and GPT-5 Mini (25.97s) on identical video inputs. This 3–4× slowdown materially impacts user confidence and Playground adoption. We will diagnose the bottleneck through instrumentation, implement targeted edge optimizations, and establish a repeatable performance baseline to compete with frontier models.</p>
+            </div>
+
+            <h3>Problem Statement</h3>
+            <div class="subsection">
+                <p><strong>What we observe:</strong> In production Playground runs, Pulsar achieves 81% threat detection accuracy (industry-leading) but requires 41 seconds per video analysis—significantly slower than cloud alternatives. End-to-end latency is the primary user-perceived friction for iteration and decision-making.</p>
+                <p><strong>Why it matters:</strong> Playground is our validation and onboarding tool. Slow inference erodes user confidence in Pulsar's "always-on" edge positioning and suggests scalability concerns. Security teams expect sub-15 second turnaround for real-time or forensic workflows.</p>
+                <p><strong>Hypothesis (to validate):</strong> The gap likely stems from a combination of: (1) suboptimal model precision/quantization for edge hardware, (2) inefficient graph execution or operator selection, (3) input pipeline overhead (video decode, frame extraction), or (4) GPU/scheduling constraints. We do not yet know the root cause and will diagnose systematically.</p>
+            </div>
+
+            <h3>Goals and Success Metrics</h3>
+            <div class="subsection">
+                <p><strong>Primary Goal:</strong> Reduce Pulsar Playground p50 inference latency from 41s → 8–12s (3.4× improvement) within 8 weeks, establishing a repeatable performance baseline for competitive positioning.</p>
+                <p><strong>Success Criteria:</strong></p>
+                <ul>
+                    <li><strong>Latency:</strong> P50 &lt; 12s, P95 &lt; 20s on video SDK (standardized input: 10 frames, 4K decode)</li>
+                    <li><strong>Accuracy:</strong> ≥80% threat detection (no regression vs. baseline)</li>
+                    <li><strong>Latency Instrumentation:</strong> Telemetry for queue time, compute time, GPU utilization, cold-start frequency, token/frame throughput by component</li>
+                    <li><strong>User Perception:</strong> Playground users report ≥4/5 responsiveness score in post-analysis feedback</li>
+                    <li><strong>Reproducibility:</strong> Performance holdable across 3+ canary customer deployments</li>
+                </ul>
+            </div>
+
+            <h3>Non-Goals</h3>
+            <div class="subsection">
+                <ul>
+                    <li>Real-time frame-by-frame inference (&lt;100ms per frame). Playground is forensic, not live.</li>
+                    <li>Model retraining or dataset augmentation. We optimize existing Pulsar weights.</li>
+                    <li>Hardware procurement or vendor lock-in. Optimize for existing NVIDIA GPU lineup.</li>
+                    <li>Cloud offload. Edge-first positioning is non-negotiable for Ambient.ai differentiation.</li>
+                </ul>
+            </div>
+
+            <h3>User Personas &amp; Stories</h3>
+            <div class="subsection">
+                <p><strong>Persona 1: Security Operations Manager</strong><br>
+                "After an incident, I want to review all camera footage in under 30 minutes to identify suspects and escalate to law enforcement. Slow analysis = delayed response."<br>
+                <em>Impact:</em> Sub-15s turnaround is critical for triage and collaboration.</p>
+                <p><strong>Persona 2: Director of Product (Ambient.ai)</strong><br>
+                "I need Playground to demonstrate Pulsar's speed and accuracy parity with cloud models so we can close Enterprise deals and defend our positioning."<br>
+                <em>Impact:</em> Competitive latency = adoption velocity and customer confidence.</p>
+            </div>
+
+            <h3>Requirements</h3>
+            <div class="subsection">
+                <p><strong>Functional Requirements</strong></p>
+                <ul>
+                    <li>Support 4–30 fps video, HD–4K resolution, MOV/MP4/MXF containers</li>
+                    <li>Output threat labels + confidence scores within 15 seconds (p95) for standard 10-frame clip</li>
+                    <li>Quality gate: Threat detection accuracy ≥80% on benchmark dataset (unchanged from baseline)</li>
+                </ul>
+                <p><strong>Non-Functional Requirements</strong></p>
+                <ul>
+                    <li><strong>Latency:</strong> P50 8–12s, P95 &lt;20s, no tail latency &gt;60s</li>
+                    <li><strong>Throughput:</strong> Support 1+ inference pipeline concurrently on single edge appliance</li>
+                    <li><strong>Resource Constraints:</strong> GPU memory &lt;8GB, CPU &lt;2 cores during inference</li>
+                    <li><strong>Fault tolerance:</strong> Graceful degradation on GPU OOM or model load failure</li>
+                    <li><strong>Observability:</strong> Wall-clock breakdown: decode, preprocess, compute, postprocess, queue</li>
+                </ul>
+            </div>
+
+            <h3>Observability Plan</h3>
+            <div class="subsection">
+                <p><strong>Baseline telemetry (to instrument immediately):</strong></p>
+                <ul>
+                    <li><strong>Timing breakdown:</strong> Video decode time, frame extraction, model input preprocessing, forward pass, postprocessing</li>
+                    <li><strong>GPU metrics:</strong> Utilization (%), memory (MB/%), compute throughput (TFLOPS), queue depth</li>
+                    <li><strong>Model metrics:</strong> Tokens processed per second, frames processed, batch size, precision (FP32/FP16/INT8)</li>
+                    <li><strong>System metrics:</strong> CPU usage, disk I/O, network I/O, cold-start frequency (model load time)</li>
+                    <li><strong>Hardware context:</strong> GPU SKU, CUDA version, input resolution, video codec, frame count</li>
+                    <li><strong>Latency percentiles:</strong> P50, P75, P95, P99, max over rolling 1-hour windows</li>
+                </ul>
+                <p><strong>Output:</strong> Real-time dashboard in Ambient.ai ops showing latency trends, bottleneck identification, and per-customer performance variance.</p>
+            </div>
+
+            <h3>Proposed Optimization Approaches</h3>
+            <p><strong>Hypothesis-driven plan. We will test each in parallel, measure impact, and combine winners.</strong></p>
+
+            <div class="optimization-grid">
+                <div class="opt-card">
+                    <div class="label">Option A</div>
+                    <h4>Quantization &amp; Precision Reduction</h4>
+                    <p>Convert Pulsar from FP32/FP16 to INT8 or FP8 using calibration on 1K threat frames. Use NVIDIA QAT or post-training quantization.</p>
+                    <p><strong>Expected impact:</strong> 2–3× compute speedup, 4× memory reduction.</p>
+                    <p><strong>Validation:</strong> Threat detection accuracy ≥79% (1% regression acceptable).</p>
+                    <div class="tradeoff">⚠️ Tradeoff: Slight accuracy loss. Requires revalidation on customer video.</div>
+                </div>
+
+                <div class="opt-card">
+                    <div class="label">Option B</div>
+                    <h4>Runtime &amp; Graph Optimization</h4>
+                    <p>Convert to TensorRT, ONNX Runtime, or Triton. Apply operator fusion, KV-cache optimization, and kernel auto-tuning.</p>
+                    <p><strong>Expected impact:</strong> 1.5–2.5× compute speedup via graph optimization.</p>
+                    <p><strong>Validation:</strong> No accuracy loss (purely inference engine change).</p>
+                    <div class="tradeoff">⚠️ Tradeoff: Requires profiling and kernel selection per GPU model.</div>
+                </div>
+
+                <div class="opt-card">
+                    <div class="label">Option C</div>
+                    <h4>Input Pipeline Optimization</h4>
+                    <p>GPU-accelerated video decode (NVDEC), adaptive frame sampling (8–12 frames), resolution reduction (1080p → 720p).</p>
+                    <p><strong>Expected impact:</strong> 1–1.5× overall speedup (decode is ~30% of latency).</p>
+                    <p><strong>Validation:</strong> Threat detection accuracy ≥80%.</p>
+                    <div class="tradeoff">⚠️ Tradeoff: Resolution reduction may hurt small-object detection.</div>
+                </div>
+
+                <div class="opt-card">
+                    <div class="label">Option D</div>
+                    <h4>Systems &amp; Scheduling</h4>
+                    <p>Right-size GPU allocation, implement request batching (batch-size 2–4), reduce cold-start overhead (lazy model loading).</p>
+                    <p><strong>Expected impact:</strong> 0.8–1.2× throughput improvement, reduced p99 latency.</p>
+                    <p><strong>Validation:</strong> No accuracy loss.</p>
+                    <div class="tradeoff">⚠️ Tradeoff: Batching increases latency for single-request workflows.</div>
+                </div>
+            </div>
+
+            <h3>Tradeoffs &amp; Risks</h3>
+            <div class="subsection">
+                <p><strong>Accuracy vs. Latency:</strong> Quantization or resolution reduction may reduce accuracy by 1–2%. We enforce guardrail: ≥79% is acceptable; &lt;79% requires retraining.</p>
+                <p><strong>Hardware Variability:</strong> Optimization gains may not transfer across GPU models (H100 vs. L4 vs. L40S). We will test on 3+ SKUs to ensure portability.</p>
+                <p><strong>Model Update Complexity:</strong> Quantized models must be versioned, validated, and rolled out carefully. We will maintain both FP32 and INT8 variants during rollout.</p>
+                <p><strong>Fairness &amp; Safety:</strong> Quantization could increase false negatives on low-confidence threats. We will validate on adversarial test cases before production release.</p>
+            </div>
+
+            <h3>Experiment Plan</h3>
+            <div class="subsection">
+                <p><strong>Phase 1: Instrumentation &amp; Baseline (Weeks 1–2)</strong></p>
+                <ul>
+                    <li>Deploy telemetry to Playground (latency breakdown, GPU metrics)</li>
+                    <li>Establish baseline: P50=41s, P95=55s on 100 representative videos</li>
+                    <li>Confirm threat detection accuracy = 81%</li>
+                </ul>
+                <p><strong>Phase 2: Offline Benchmarking (Weeks 2–4)</strong></p>
+                <ul>
+                    <li>Option A: Generate INT8 variant, benchmark on 500 videos. Stop if accuracy &lt;79%.</li>
+                    <li>Option B: Convert to TensorRT, benchmark on same 500 videos.</li>
+                    <li>Option C: Implement NVDEC decode, test on sample videos.</li>
+                </ul>
+                <p><strong>Phase 3: A/B Canary (Weeks 5–6)</strong></p>
+                <ul>
+                    <li>Deploy best-performing optimization to 2 canary customers in parallel with baseline.</li>
+                    <li>Collect 1000+ inferences. Measure latency, accuracy, user feedback.</li>
+                    <li>Stop-loss: If P50 &gt; 15s or accuracy &lt;79%, revert immediately.</li>
+                </ul>
+                <p><strong>Phase 4: Rollout &amp; Iteration (Weeks 7–8)</strong></p>
+                <ul>
+                    <li>Roll out to all Playground users if canary passes acceptance criteria.</li>
+                    <li>Monitor for 2 weeks. Iterate based on real-world telemetry.</li>
+                    <li>Document lessons learned and optimization decisions.</li>
+                </ul>
+            </div>
+
+            <h3>Milestones &amp; Timeline</h3>
+            <div class="timeline-grid">
+                <div class="timeline-card">
+                    <div class="phase">Week 1–2</div>
+                    <div class="timeframe">Instrument &amp; Baseline</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="phase">Week 2–4</div>
+                    <div class="timeframe">Offline Benchmarking</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="phase">Week 5–6</div>
+                    <div class="timeframe">Canary A/B Test</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="phase">Week 7–8</div>
+                    <div class="timeframe">Rollout &amp; Validation</div>
+                </div>
+            </div>
+
+            <h3>Open Questions</h3>
+            <div class="subsection">
+                <ul>
+                    <li>Root cause: Is latency primarily compute (model forward pass) or I/O (decode, preprocess)? Requires baseline telemetry.</li>
+                    <li>Model precision: What is minimum viable precision without accuracy loss &gt;1%?</li>
+                    <li>Hardware constraint: Are we GPU-bound or memory-bound on typical edge hardware?</li>
+                    <li>Video variability: Does latency correlate with input resolution, codec, frame count, or threat complexity?</li>
+                    <li>Competitive parity: Can we achieve &lt;12s p50 and maintain 81% threat accuracy simultaneously?</li>
+                    <li>Customer acceptance: Will Playground users adopt optimized variant if it trades 1–2% accuracy for 3.4× speedup?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. VLM Landscape</h2>
+
+            <h3>VLMs in Physical Security: What Matters</h3>
+            <div class="subsection">
+                <p>Vision-language models (VLMs) represent the frontier of AI-powered physical security. For Playground positioning and competitive defense, five dimensions drive adoption:</p>
+                <ul>
+                    <li><strong>Latency:</strong> Sub-15 second turnaround for forensic analysis and triage. User experience is inversely proportional to wait time.</li>
+                    <li><strong>Temporal reasoning:</strong> Understanding behavior causality across frames—not just detecting objects, but reasoning about intent and escalation.</li>
+                    <li><strong>Robustness:</strong> Handling occlusion, poor lighting, masked individuals, and adversarial conditions—edge deployments cannot rely on clean video.</li>
+                    <li><strong>Cost:</strong> Edge-optimized models &lt;$100/month per site vs. $5,000+/month cloud models. TCO is decision-factor for mid-market.</li>
+                    <li><strong>Privacy &amp; On-Premises:</strong> No facial recognition, no cloud dependency, no data egress—regulatory and compliance necessity for government/enterprise.</li>
+                </ul>
+            </div>
+
+            <h3>VLM Categories &amp; Competitive Positioning</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Examples</th>
+                        <th>Key Strengths</th>
+                        <th>Implications for Pulsar Playground</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Frontier / Cloud</strong></td>
+                        <td>GPT-5, Gemini 3 Pro, Claude Opus 4.5</td>
+                        <td>Maximum reasoning, multi-frame understanding, tool integration, highest accuracy on novel tasks</td>
+                        <td>Highest user expectation-setting (9–25s latency). Pulsar competes on accuracy, privacy, and edge efficiency—not reasoning breadth.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Edge-Optimized (8B–32B)</strong></td>
+                        <td>InternVL 3.5, Qwen3-VL, MiniCPM-V</td>
+                        <td>Local deployment, &lt;5 second latency, acceptable accuracy on standard benchmarks, low cost</td>
+                        <td>Emerging threat. Pulsar should benchmark against these on latency + accuracy. May adopt similar quantization strategies. These are open-source alternatives.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Specialized Security VLMs</strong></td>
+                        <td>Pulsar 1.0, custom threat-tuned</td>
+                        <td>Domain training (1M+ hours footage), 81% threat accuracy, behavioral reasoning, physical security context</td>
+                        <td>Pulsar's moat: unmatched threat library and physical security domain expertise. Must maintain latency parity with OSS models and frontier models to sustain competitive advantage.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>3. Competitive Analysis</h2>
+
+            <h3>Physical Security AI Landscape: Who Threatens Our Position</h3>
+            <p>The physical security market is consolidating around cloud-native VSaaS platforms and emerging edge-reasoning alternatives. Ambient.ai's Pulsar differentiates on edge-optimized reasoning, privacy-first design, and 95% false alarm reduction. Below is a competitive snapshot focused on threat to Playground adoption and Pulsar positioning.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Competitor</th>
+                        <th>Positioning</th>
+                        <th>Strengths</th>
+                        <th>Gaps vs. Ambient.ai / Pulsar</th>
+                        <th>What We Learn / Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Verkada</strong></td>
+                        <td>Cloud VSaaS (#1 market, $4.5B valuation). Turnkey for SMB–mid-market.</td>
+                        <td>Integrated hardware + cloud, 25K+ integrations, mandatory AI bundles, incumbency</td>
+                        <td>Cloud-dependent latency, proprietary cameras (lock-in), no on-premises option</td>
+                        <td><em>Action:</em> Defend latency; emphasize privacy/on-edge positioning. Consider annual Pulsar licensing model for Playground tiers (competitive against their SaaS bundling).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Avigilon Alta (Motorola)</strong></td>
+                        <td>Enterprise hybrid (cloud + on-prem). Appearance Search™, conversational AI.</td>
+                        <td>Motorola installed base, LMR radio integration, Visual Alerts, recent AI push</td>
+                        <td>Recent conversational AI directly competes. On-prem reasoning accuracy lags Pulsar (77% vs. 81%). Latency ~18s.</td>
+                        <td><em>Action:</em> Emphasize threat accuracy (81% vs. 77%). Defend Playground responsiveness (target &lt;12s). LMR partnership is table-stakes for government sales—explore Motorola integration.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Eagle Eye Networks</strong></td>
+                        <td>Cloud VMS + "Smart Video Search." Open camera compatibility.</td>
+                        <td>Multi-site enterprises, camera agnostic, partner ecosystem, search-forward UX</td>
+                        <td>Search-centric (post-incident), no real-time threat reasoning, reactive analytics</td>
+                        <td><em>Action:</em> Semantic search UX is industry-standard. Ensure Pulsar's Agentic Investigations UI matches ease-of-use. Ecosystem resilience (camera integrations) matters for deals.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Milestone / Genetec</strong></td>
+                        <td>On-premises VMS incumbents. Open platform; 3rd-party AI overlay.</td>
+                        <td>Massive installed base, GDPR/compliance focus, 1000s integrators, customer stickiness</td>
+                        <td>Reactive (post-incident), poor real-time detection, slow to innovate, incumbent inertia</td>
+                        <td><em>Action:</em> Don't replace VMS; integrate with it. Milestone/Genetec are distribution channels. Accelerate plugin development for easy deployment.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Actuate (Gun Detection)</strong></td>
+                        <td>Specialized point solution: real-time gun detection (&gt;99% accuracy in 5s)</td>
+                        <td>Single-threaded focus, high accuracy on narrow problem, emerging customer traction</td>
+                        <td>Point solution (not platform), no contextual reasoning, limited threat taxonomy</td>
+                        <td><em>Action:</em> Point solutions can co-exist with platform. Consider bundling Actuate-like gun detection as premium add-on to Pulsar. Co-marketing opportunity.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BriefCam (Video Synopsis)</strong></td>
+                        <td>Post-incident forensics. VIDEO SYNOPSIS® + deep learning search.</td>
+                        <td>De facto standard in law enforcement (40+ countries), dramatic review time reduction, trusted brand</td>
+                        <td>Forensics-only, no real-time reasoning, owned by Canon (traditional imaging vendor)</td>
+                        <td><em>Action:</em> Strong customer demand for investigation speed. Our Agentic Investigations should directly compete. BriefCam is potential M&A or partnership target. Benchmark investigation workflows.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Strategic Recommendations for Pulsar / Playground</h3>
+            <div class="subsection">
+                <ul>
+                    <li><strong>Defend latency immediately:</strong> Pulsar's 41s baseline is materially slower than cloud competitors. Closing gap to 8–12s neutralizes the most visible threat (Gemini) and establishes platform credibility.</li>
+                    <li><strong>Emphasize privacy &amp; on-edge:</strong> No-facial-recognition, no-cloud-dependency positioning resonates with GDPR enterprises and government customers. Make explicit in RFPs and Playground demo narratives.</li>
+                    <li><strong>Build distribution with VMS incumbents:</strong> Partner with Milestone/Genetec as AI reasoning layer, not VMS replacement. Plugins and integrations are path to scale.</li>
+                    <li><strong>Vertical expansion:</strong> Develop threat libraries for tech/aerospace/pharma (data center intrusion, asset theft, unauthorized access). Pulsar's domain expertise is moat.</li>
+                    <li><strong>Quantify ROI:</strong> Systematically document customer outcomes (95% alarm reduction, investigation time savings, incident response acceleration). Build business cases against Verkada and Avigilon.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Document:</strong> PRD: Reduce Pulsar Playground Inference Latency</p>
+            <p><strong>Author:</strong> Ambient.ai Product Leadership</p>
+            <p><strong>Date:</strong> January 26, 2026</p>
+            <p><strong>Status:</strong> Executive Review | Distribution: Leadership, Engineering, Product</p>
+        </div>
+    </div>
+</body>
+</html>
