@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ford AI Initiatives – Interactive Overview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050814;
+      --bg-elevated: #0c1020;
+      --bg-card: #101425;
+      --accent: #1e90ff;
+      --accent-soft: rgba(30, 144, 255, 0.12);
+      --accent-strong: #4aa3ff;
+      --accent-warn: #f7b500;
+      --text-main: #f5f7ff;
+      --text-muted: #a4acc4;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --chip-bg: rgba(255, 255, 255, 0.06);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.6);
+      --shadow-subtle: 0 12px 30px rgba(0, 0, 0, 0.3);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-strong: rgba(255, 255, 255, 0.08);
+      --glow: 0 10px 40px rgba(30, 144, 255, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background: radial-gradient(circle at top, #17213c 0, #050814 55%, #020309 100%);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+
+    a {
+      color: var(--accent-strong);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    @media (max-width: 960px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar */
+    .sidebar {
+      border-right: 1px solid var(--border-subtle);
+      padding: 20px 18px;
+      background: radial-gradient(circle at top left, #111732 0, #050814 40%, #020309 100%);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 960px) {
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+    }
+
+    .logo-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .logo-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #53b3ff 0, #1e90ff 45%, #0a63c5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .logo-text-main {
+      font-weight: 650;
+      letter-spacing: 0.03em;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: #d2ddff;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7f89a8;
+      margin: 20px 4px 6px;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px;
+    }
+
+    .nav-item {
+      margin-bottom: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-link span.icon {
+      width: 18px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .nav-link.active {
+      background: linear-gradient(90deg, rgba(30, 144, 255, 0.22), rgba(30, 144, 255, 0.06));
+      color: var(--text-main);
+      box-shadow: 0 0 0 1px rgba(102, 178, 255, 0.35);
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .sidebar-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 180, 120, 0.08);
+      color: #9af7c6;
+      font-size: 11px;
+      margin: 6px 4px 0;
+    }
+
+    .sidebar-footer {
+      margin-top: 24px;
+      padding: 10px;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left, rgba(30, 144, 255, 0.14), rgba(4, 8, 24, 0.95));
+      border: 1px solid rgba(102, 178, 255, 0.4);
+      box-shadow: var(--shadow-subtle);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .sidebar-footer strong {
+      color: var(--text-main);
+    }
+
+    /* Main layout */
+    .main {
+      padding: 22px 26px 40px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .main {
+        padding: 18px 16px 32px;
+      }
+    }
+
+    /* Top header */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-main {
+      padding: 18px 18px 18px;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left, #1d2b52 0, #050814 60%);
+      border: 1px solid rgba(88, 147, 255, 0.4);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9fb5ff;
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-size: 24px;
+      font-weight: 640;
+      margin-bottom: 6px;
+    }
+
+    .hero-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 560px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag-pill {
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--chip-bg);
+      color: var(--text-muted);
+    }
+
+    .hero-side {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top right, rgba(30, 144, 255, 0.25), rgba(5, 8, 20, 0.98));
+      border: 1px solid rgba(153, 203, 255, 0.45);
+      padding: 16px 15px 14px;
+      box-shadow: var(--shadow-subtle);
+      font-size: 12px;
+    }
+
+    .hero-side-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #d7e4ff;
+      margin-bottom: 8px;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .metric-card {
+      border-radius: 12px;
+      padding: 8px 10px 7px;
+      background: rgba(2, 5, 18, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .metric-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 3px;
+    }
+
+    .metric-value {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Content sections */
+    section {
+      margin-bottom: 26px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .pill-label {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--chip-bg);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pill-label span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #14cc8a;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 14px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      font-size: 13px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .card-badge {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-muted);
+    }
+
+    .card-body {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .card-body strong {
+      color: var(--text-main);
+      font-weight: 550;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--chip-bg);
+      color: var(--text-muted);
+    }
+
+    ul.compact-list {
+      padding-left: 18px;
+      margin: 4px 0 0;
+    }
+
+    ul.compact-list li {
+      margin-bottom: 3px;
+    }
+
+    /* Tabs / interactive switching */
+    .tab-row {
+      display: inline-flex;
+      padding: 4px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .tab-btn {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      transition: background 0.16s ease, color 0.16s ease;
+      font-family: inherit;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+    }
+
+    .personas-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 960px) {
+      .personas-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .persona-card {
+      border-radius: var(--radius-md);
+      background: rgba(13, 20, 46, 0.95);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 11px;
+      font-size: 12px;
+    }
+
+    .persona-title {
+      font-weight: 560;
+      margin-bottom: 4px;
+    }
+
+    .persona-tag {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .cta-button-primary {
+      padding: 7px 13px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, #1e90ff, #4aa3ff);
+      color: white;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 16px 40px rgba(18, 118, 255, 0.6);
+      font-family: inherit;
+    }
+
+    .cta-button-secondary {
+      padding: 7px 13px;
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+
+    /* Detail panels */
+    .detail-panel {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left, rgba(30, 144, 255, 0.16), rgba(6, 10, 30, 0.98));
+      border: 1px solid rgba(122, 174, 255, 0.5);
+      padding: 13px 14px 12px;
+      box-shadow: var(--shadow-subtle);
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .detail-title {
+      font-weight: 560;
+      margin-bottom: 4px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px 14px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .detail-item-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1px;
+    }
+
+    .detail-item-value {
+      font-size: 12px;
+    }
+
+    /* --- Enhancements --- */
+    .nav-link.active {
+      box-shadow: 0 0 0 1px rgba(102, 178, 255, 0.35), var(--glow);
+    }
+
+    .sidebar {
+      backdrop-filter: blur(8px);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+    }
+
+    .hero {
+      position: relative;
+    }
+
+    .hero-main {
+      background: radial-gradient(circle at 20% 20%, rgba(74, 163, 255, 0.35), rgba(29, 43, 82, 0.85) 45%, #050814 90%);
+      border: 1px solid rgba(88, 147, 255, 0.45);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(74, 163, 255, 0.18), transparent 45%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      animation: glowShift 9s ease-in-out infinite alternate;
+    }
+
+    .tag-pill {
+      background: var(--glass);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .tag-pill:active {
+      transform: scale(0.97);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .card {
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+      backdrop-filter: blur(6px);
+      transition: transform 0.18s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(74, 163, 255, 0.5);
+      box-shadow: var(--shadow-soft), var(--glow);
+    }
+
+    .cta-button-primary {
+      transition: transform 0.14s ease, box-shadow 0.16s ease;
+    }
+
+    .cta-button-primary:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(18, 118, 255, 0.75);
+    }
+
+    .cta-button-primary:active {
+      transform: translateY(0) scale(0.99);
+    }
+
+    .cta-button-secondary {
+      transition: color 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+    }
+
+    .cta-button-secondary:hover {
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+    }
+
+    /* Filter/search bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 12px 0 20px;
+    }
+
+    .filter-pills {
+      display: inline-flex;
+      gap: 8px;
+      padding: 6px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .filter-pill {
+      border: none;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.14s ease, color 0.14s ease, transform 0.12s ease;
+      font-family: inherit;
+    }
+
+    .filter-pill.active {
+      background: var(--accent-soft);
+      color: var(--text-main);
+      box-shadow: inset 0 0 0 1px rgba(74, 163, 255, 0.4), var(--glow);
+    }
+
+    .filter-pill:focus-visible,
+    .nav-link:focus-visible,
+    .cta-button-primary:focus-visible,
+    .cta-button-secondary:focus-visible,
+    .tab-btn:focus-visible {
+      outline: 2px solid rgba(74, 163, 255, 0.9);
+      outline-offset: 2px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 36px 10px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .search-input:focus {
+      border-color: rgba(74, 163, 255, 0.6);
+      box-shadow: var(--glow);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 50%;
+    }
+
+    .no-results {
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .nav-mobile { display: none; }
+
+    /* Scroll progress */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0;
+      background: linear-gradient(90deg, #1e90ff, #4aa3ff);
+      box-shadow: 0 0 20px rgba(74, 163, 255, 0.8);
+      z-index: 20;
+      transition: width 0.08s linear;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(9, 14, 30, 0.8);
+      color: var(--text-main);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-subtle);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(-4px);
+    }
+
+        /* View-specific text */
+    .view-systems { display: none; }
+    .view-pm { display: inline; }
+    body[data-view-mode="systems"] .view-pm { display: none; }
+    body[data-view-mode="systems"] .view-systems { display: inline; }
+
+    /* Timeline strip */
+    .timeline {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 8px 0 4px;
+      scrollbar-width: thin;
+    }
+
+    .timeline-pill {
+      flex: 0 0 auto;
+      padding: 7px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--glass);
+      border: 1px solid var(--border-subtle);
+      font-size: 12px;
+      color: var(--text-muted);
+      backdrop-filter: blur(4px);
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 768px) {
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .filter-pills { width: 100%; flex-wrap: wrap; }
+      .filter-pill { flex: 1 1 calc(50% - 8px); text-align: center; }
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .nav-mobile {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: rgba(5, 8, 20, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border-subtle);
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+      }
+      .nav-mobile button { white-space: nowrap; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+
+    @keyframes glowShift {
+      0% { opacity: 0.6; transform: translate3d(0,0,0); }
+      100% { opacity: 0.9; transform: translate3d(4px, -6px, 0); }
+    }
+
+    .footer {
+      margin-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+</style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="app-shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-block">
+        <div class="logo-pill">F</div>
+        <div>
+          <div class="logo-text-main">Ford AI Initiatives</div>
+          <div class="logo-text-sub">Sales & Services PM Briefing</div>
+        </div>
+      </div>
+
+      <div class="sidebar-chip">
+        <span>●</span> Interview‑ready overview
+      </div>
+
+      <div class="sidebar-section-title">Navigate</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <button class="nav-link active" data-target="overview">
+            <span class="icon">🏁</span>
+            <span>Executive Snapshot</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-target="dealers">
+            <span class="icon">🏬</span>
+            <span>Dealer AI Ecosystem</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-target="ces">
+            <span class="icon">🚗</span>
+            <span>CES 2026 & Vehicle AI</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-target="internal">
+            <span class="icon">🏭</span>
+            <span>Internal AI Platforms</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-target="strategy">
+            <span class="icon">🧭</span>
+            <span>Strategy & Talking Points</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-section-title">Mode</div>
+      <div class="tab-row" id="viewMode">
+        <button class="tab-btn active" data-mode="pm">PM View</button>
+        <button class="tab-btn" data-mode="systems">Systems</button>
+      </div>
+
+      <div class="sidebar-footer">
+        <strong>How to use this page</strong><br />
+        Skim by section in the left nav, then use the "PM View / Systems" toggle
+        to mentally switch between business outcomes and technical architecture.
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="nav-mobile" aria-label="Mobile navigation">
+        <button class="nav-link active" data-target="overview"><span class="icon">🏁</span> Executive Snapshot</button>
+        <button class="nav-link" data-target="dealers"><span class="icon">🏬</span> Dealers</button>
+        <button class="nav-link" data-target="ces"><span class="icon">🚗</span> CES & Vehicle</button>
+        <button class="nav-link" data-target="internal"><span class="icon">🏭</span> Internal</button>
+        <button class="nav-link" data-target="strategy"><span class="icon">🧭</span> Strategy</button>
+      </div>
+      <!-- HERO -->
+      <section class="hero" id="overview" data-tags="strategy">
+        <div class="hero-main">
+          <div class="hero-kicker">Ford · AI Transformation</div>
+          <div class="hero-title">From reactive to predictive, personalized and seamless</div>
+          <div class="hero-subtitle">
+            Ford is deploying AI across dealers, vehicles, and internal platforms. This page
+            condenses the Ford AI Initiatives Deep Dive and recent research into a single,
+            interview‑ready view for the Sales & Services AI Product Manager role.
+          </div>
+          <div class="hero-tags">
+            <span class="tag-pill">FordDirect · CJP · Dealer AI</span>
+            <span class="tag-pill">Ford AI Assistant & BlueCruise</span>
+            <span class="tag-pill">FordLLM & Mach1ML</span>
+            <span class="tag-pill">Sales & Service Journey</span>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="hero-side-title">Fast context</div>
+          <div class="hero-metrics">
+            <div class="metric-card">
+              <div class="metric-label">Dealer footprint</div>
+              <div class="metric-value">~3,000</div>
+              <div class="metric-footnote">Ford & Lincoln dealers on FordDirect‑powered AI tools.</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">FordLLM usage</div>
+              <div class="metric-value">50K+ / wk</div>
+              <div class="metric-footnote">Employees using internal LLM portal across the enterprise.</div>
+            </div>
+          </div>
+          <div class="metric-footnote" style="margin-top:10px;">
+            Think of the role as orchestrating these capabilities into coherent AI products across the
+            sales and service lifecycle.
+          </div>
+        </div>
+      </section>
+
+      <div class="filter-bar" aria-label="Filter content">
+        <div class="filter-pills" role="group" aria-label="Tag filters">
+          <button class="filter-pill active" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-pill" data-filter="dealer" aria-pressed="false">Dealer AI</button>
+          <button class="filter-pill" data-filter="vehicle" aria-pressed="false">Vehicle / Assistant</button>
+          <button class="filter-pill" data-filter="internal" aria-pressed="false">Internal Platforms</button>
+          <button class="filter-pill" data-filter="strategy" aria-pressed="false">Strategy</button>
+        </div>
+        <div class="search-box">
+          <input id="searchInput" class="search-input" type="search" placeholder="Search cards..." aria-label="Search" />
+          <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+        </div>
+      </div>
+      <div class="no-results" id="noResults">No matches found. Try a different tag or search.</div>
+
+      <!-- DEALER ECOSYSTEM -->
+      <section id="dealers" data-tags="dealer">
+        <div class="section-header">
+          <div>
+            <div class="section-title">FordDirect Dealer AI Ecosystem</div>
+            <div class="section-subtitle">
+              How FordDirect uses partners to turn the Customer Journey Platform (CJP) into an AI operating system for dealers.
+            </div>
+          </div>
+          <div class="pill-label">
+            <span class="dot"></span>
+            Live in‑market today
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <!-- Marchex -->
+          <article class="card" data-card="true" data-tags="dealer">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Marchex · Engage for Sales & Service</div>
+                <div class="card-badge">AI conversation intelligence</div>
+              </div>
+              <span style="font-size:16px;">📞</span>
+            </div>
+            <div class="card-body">
+              <strong>What it does</strong><br />
+              AI analyzes inbound calls to classify intent, detect missed opportunities, and score sentiment across
+              sales and service interactions at scale.<br /><br />
+              <strong>FordDirect angle</strong><br />
+              Available to ~3,000 Ford & Lincoln dealers through FordDirect. Feeds call outcomes and sentiment into
+              performance reporting and coaching; enables re‑engagement on high‑value missed calls.
+              <ul class="compact-list">
+                <li>Engage for Sales & Service on top of prior Spotlight call analytics.</li>
+                <li>Dealer‑level insights into revenue leakage and CX quality.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">Phone intent classification</span>
+                <span class="chip">Missed‑opportunity alerts</span>
+                <span class="chip">Sentiment scoring</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Impel -->
+          <article class="card" data-card="true" data-tags="dealer">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Impel · Conversational Automotive AI</div>
+                <div class="card-badge">Lifecycle concierge</div>
+              </div>
+              <span style="font-size:16px;">💬</span>
+            </div>
+            <div class="card-body">
+              <strong>What it does</strong><br />
+              AI concierge that engages shoppers and owners across digital channels, with bi‑directional data flow to
+              FordDirect's Customer Journey Platform (CJP).<br /><br />
+              <strong>FordDirect angle</strong><br />
+              Impel is integrated directly into CJP so that first‑party data informs conversations, and AI conversations
+              feed back rich self‑reported data.
+              <ul class="compact-list">
+                <li>Hyper‑personalized outreach across sales and service touchpoints.</li>
+                <li>Material lifts in show appointments and incremental repair orders in early pilots.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">Bi‑directional CJP integration</span>
+                <span class="chip">Sales & service journeys</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Podium -->
+          <article class="card" data-card="true" data-tags="dealer">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Podium · AI BDC ("Jerry")</div>
+                <div class="card-badge">AI employee for leads</div>
+              </div>
+              <span style="font-size:16px;">🤖</span>
+            </div>
+            <div class="card-body">
+              <strong>What it does</strong><br />
+              Always‑on AI BDC that responds to leads via text and other digital channels in the dealer's tone, books appointments,
+              and handles FAQs.<br /><br />
+              <strong>FordDirect angle</strong><br />
+              Offered through FordDirect with planned direct CJP integration so lead handling and follow‑ups are consistent
+              across channels.
+              <ul class="compact-list">
+                <li>80% increase in after‑hours appointments, ~30% better lead‑to‑sale conversion in field results.</li>
+                <li>Significant reduction in response times and manual BDC load.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">AI BDC / AI employee</span>
+                <span class="chip">Text‑first engagement</span>
+                <span class="chip">Lead‑to‑sale lift</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- OneMagnify -->
+          <article class="card" data-card="true" data-tags="dealer">
+            <div class="card-header">
+              <div>
+                <div class="card-title">OneMagnify · Insight Engage / Dealer Co‑Pilot</div>
+                <div class="card-badge">Analytics co‑pilot</div>
+              </div>
+              <span style="font-size:16px;">📊</span>
+            </div>
+            <div class="card-body">
+              <strong>What it does</strong><br />
+              Natural‑language assistant for dealer leaders to query performance data (CRM, inventory, demand, CJP
+              signals) and get synthesized insights instead of siloed dashboards.<br /><br />
+              <strong>FordDirect angle</strong><br />
+              Built specifically for FordDirect and its dealers; branded as a "co‑pilot" to make AI analytics usable for
+              GMs and sales managers in the flow of work.
+
+              <div class="chip-row">
+                <span class="chip">NLQ over dealer data</span>
+                <span class="chip">Decision support</span>
+                <span class="chip">Showroom intelligence</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="detail-panel">
+          <div class="detail-title">As a PM, how do you tell this story?</div>
+          <div>
+            Think of FordDirect's ecosystem as a layered AI stack on top of the Customer Journey Platform:
+            <strong>Marchex listens</strong> (calls), <strong>Impel & Podium talk</strong> (conversational engagement),
+            and <strong>Insight Engage helps leaders decide</strong>. Your job is to use these signals and surfaces to
+            design end‑to‑end journeys with clear business outcomes (conversion, service revenue, loyalty).
+          </div>
+        </div>
+      </section>
+
+      <!-- CES 2026 & VEHICLE AI -->
+      <section id="ces" data-tags="vehicle">
+        <div class="section-header">
+          <div>
+            <div class="section-title">CES 2026: Ford AI Assistant, UEV Platform & BlueCruise</div>
+            <div class="section-subtitle">
+              How Ford is turning vehicles into software‑defined, AI‑aware products.
+            </div>
+          </div>
+          <div class="pill-label">
+            <span class="dot"></span>
+            Consumer‑facing AI products
+          </div>
+        </div>
+
+        <div class="timeline" aria-label="Key milestones">
+          <div class="timeline-pill">H1 2026 · AI Assistant in Ford/Lincoln apps</div>
+          <div class="timeline-pill">2026 · UEV compute module ships</div>
+          <div class="timeline-pill">2027 · OTA cadence for assistant/ADAS</div>
+          <div class="timeline-pill">~2028 · BlueCruise L3 eyes-off target</div>
+        </div>
+
+        <div class="card-grid">
+          <!-- Ford AI Assistant -->
+          <article class="card" data-card="true" data-tags="vehicle">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Ford AI Assistant</div>
+                <div class="card-badge">Vehicle‑aware AI thread</div>
+              </div>
+              <span style="font-size:16px;">🧠</span>
+            </div>
+            <div class="card-body">
+              Built on Google Cloud with access to LLMs, the Ford AI Assistant is designed as an
+              "intelligent thread" across app and in‑vehicle experiences. It is aware of vehicle context
+              (equipment, health, capabilities) as well as general knowledge.
+              <ul class="compact-list">
+                <li>Launches in Ford & Lincoln apps first (H1 2026), then into vehicles on UEV platform.</li>
+                <li>Can answer questions about your specific vehicle (tire pressure, towing, range, etc.).</li>
+                <li>Supports text, voice, and image input (e.g., cargo fit questions).</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">8M+ customers app reach</span>
+                <span class="chip">Context‑aware assistant</span>
+              </div>
+              <div class="view-pm" style="display:block;margin-top:8px;font-size:12px;color:#c7d6ff;">PM takeaway: hook assistant signals into service outreach and loyalty flows.</div>
+              <div class="view-systems" style="display:block;margin-top:4px;font-size:12px;color:#c7d6ff;">Systems detail: assistant sits on GCP with LLM access + vehicle context APIs; plan API contracts early.</div>
+            </div>
+          </article>
+
+          <!-- UEV Platform -->
+          <article class="card" data-card="true" data-tags="vehicle">
+            <div class="card-header">
+              <div>
+                <div class="card-title">UEV Platform & Compute Module</div>
+                <div class="card-badge">Software‑defined hardware</div>
+              </div>
+              <span style="font-size:16px;">🧩</span>
+            </div>
+            <div class="card-body">
+              Ford's new Universal EV (UEV) platform underpins a ~$30K EV truck and future models. A compact,
+              in‑house‑designed compute module consolidates infotainment, ADAS, audio, and connectivity into a single
+              "vehicle brain."
+              <ul class="compact-list">
+                <li>~20% fewer parts, 15% faster assembly, lower cost base.</li>
+                <li>Smaller, cheaper compute with much tighter control over critical semiconductors.</li>
+                <li>Deliberate vertical integration to own the AI + autonomy stack over time.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">Centralized compute</span>
+                <span class="chip">Vertical integration</span>
+              </div>
+              <div class="view-pm" style="display:block;margin-top:8px;font-size:12px;color:#c7d6ff;">PM takeaway: cheaper, centralized compute = faster OTA AI features and lower BOM for value models.</div>
+              <div class="view-systems" style="display:block;margin-top:4px;font-size:12px;color:#c7d6ff;">Systems detail: consolidated ECU + ADAS stack; design for single OTA pipeline and telemetry schemas.</div>
+            </div>
+          </article>
+
+          <!-- BlueCruise -->
+          <article class="card" data-card="true" data-tags="vehicle">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Next‑Gen BlueCruise</div>
+                <div class="card-badge">From L2 to L3 (eyes‑off)</div>
+              </div>
+              <span style="font-size:16px;">🛣️</span>
+            </div>
+            <div class="card-body">
+              BlueCruise is Ford's hands‑free driving system, already deployed on over a million vehicles with hundreds of
+              millions of hands‑free miles. Ford is now driving toward Level 3 "eyes‑off" capabilities on the UEV
+              platform.
+              <ul class="compact-list">
+                <li>Next‑gen system targets ~30% lower cost via new compute and architecture.</li>
+                <li>L3 eyes‑off driving targeted around 2028 for everyday customers, not just flagship models.</li>
+                <li>Subscription monetization model already in place; opens path for more AI subscriptions.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">ADAS → autonomy</span>
+                <span class="chip">Subscription revenue</span>
+              </div>
+              <div class="view-pm" style="display:block;margin-top:8px;font-size:12px;color:#c7d6ff;">PM takeaway: monetize via subscriptions + coaching; use driving data to personalize offers.</div>
+              <div class="view-systems" style="display:block;margin-top:4px;font-size:12px;color:#c7d6ff;">Systems detail: L3 roadmap hinges on new compute & sensor fusion; align data contracts for behavior signals.</div>
+            </div>
+          </article>
+
+          <!-- Connection to Sales & Services -->
+          <article class="card" data-card="true" data-tags="vehicle strategy">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Link to Sales & Services Journeys</div>
+                <div class="card-badge">Experience continuity</div>
+              </div>
+              <span style="font-size:16px;">🔗</span>
+            </div>
+            <div class="card-body">
+              For your role, these vehicle‑side initiatives matter because they create new signals and new surfaces:
+              <ul class="compact-list">
+                <li>Assistant + telematics → proactive service offers, in‑app scheduling, and contextual upsell.</li>
+                <li>BlueCruise usage → behavior data to personalize coaching, insurance, and digital experiences.</li>
+                <li>Centralized compute → faster OTA delivery of AI‑powered features your products may depend on.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">Vehicle → CJP feedback</span>
+                <span class="chip">Proactive service</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- INTERNAL AI PLATFORMS -->
+      <section id="internal" data-tags="internal">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Internal AI Platforms: FordLLM & Mach1ML</div>
+            <div class="section-subtitle">
+              The internal "rails" that make Ford's AI products shippable at enterprise scale.
+            </div>
+          </div>
+          <div class="pill-label">
+            <span class="dot"></span>
+            Internal platform leverage
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <!-- FordLLM -->
+          <article class="card" data-card="true" data-tags="internal">
+            <div class="card-header">
+              <div>
+                <div class="card-title">FordLLM</div>
+                <div class="card-badge">Enterprise LLM portal</div>
+              </div>
+              <span style="font-size:16px;">🗂️</span>
+            </div>
+            <div class="card-body">
+              FordLLM is the internal generative AI portal giving employees access to multiple LLMs (e.g., ChatGPT,
+              Gemini, Llama) via a secure UI and APIs. Adoption has reached tens of thousands of weekly active users
+              across functions.
+              <ul class="compact-list">
+                <li>Used for market research, documentation, code assistance, and content creation.</li>
+                <li>Supports both individual productivity and programmatic integration into applications.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">Secure LLM access</span>
+                <span class="chip">APIs for apps</span>
+              </div>
+              <div class="view-pm" style="display:block;margin-top:8px;font-size:12px;color:#c7d6ff;">PM takeaway: leverage existing LLM UI/APIs instead of net-new stacks; focus on use-case fit.</div>
+              <div class="view-systems" style="display:block;margin-top:4px;font-size:12px;color:#c7d6ff;">Systems detail: multi-model gateway with policy guardrails; design intents + retrieval layers on top.</div>
+            </div>
+          </article>
+
+          <!-- Mach1ML -->
+          <article class="card" data-card="true" data-tags="internal">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Mach1ML & MDK</div>
+                <div class="card-badge">MLOps & model factory</div>
+              </div>
+              <span style="font-size:16px;">⚙️</span>
+            </div>
+            <div class="card-body">
+              Mach1ML is Ford's multi‑million‑dollar ML platform powering predictive and generative use cases. Its MDK
+              (MLOps Development Kit) uses Apache Airflow and custom operators to orchestrate training, evaluation, and
+              deployment across cloud and HPC.
+              <ul class="compact-list">
+                <li>Standardized pipelines, experiment tracking, and deployment patterns.</li>
+                <li>Supports both batch and real‑time models for customer, engineering, and operations use cases.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">Standardized ML pipelines</span>
+                <span class="chip">HPC + cloud hybrid</span>
+              </div>
+              <div class="view-pm" style="display:block;margin-top:8px;font-size:12px;color:#c7d6ff;">PM takeaway: ask platform for reusable features (churn, propensity) before bespoke models.</div>
+              <div class="view-systems" style="display:block;margin-top:4px;font-size:12px;color:#c7d6ff;">Systems detail: Airflow + custom operators for train/eval/deploy; supports batch + streaming endpoints.</div>
+            </div>
+          </article>
+
+          <!-- Workforce & Governance -->
+          <article class="card" data-card="true" data-tags="internal">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Workforce & Governance</div>
+                <div class="card-badge">Trust Algorithm</div>
+              </div>
+              <span style="font-size:16px;">🛡️</span>
+            </div>
+            <div class="card-body">
+              Under Chief Data, AI & Analytics Officer Franziska Bell, Ford is training thousands of employees in AI and
+              operating under a "Trust Algorithm" framework for responsible AI.
+              <ul class="compact-list">
+                <li>AI Technology Council oversees high‑impact use cases and risk.</li>
+                <li>Bias, privacy, and human‑in‑the‑loop requirements are built into product planning.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">Ethical AI</span>
+                <span class="chip">AI literacy</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Your leverage -->
+          <article class="card" data-card="true" data-tags="internal strategy">
+            <div class="card-header">
+              <div>
+                <div class="card-title">What this means for your roadmap</div>
+                <div class="card-badge">Leverage, not reinvention</div>
+              </div>
+              <span style="font-size:16px;">📐</span>
+            </div>
+            <div class="card-body">
+              For the Sales & Services AI PM role, FordLLM and Mach1ML are the rails you build on. Rather than
+              green‑field infra, your leverage comes from:
+              <ul class="compact-list">
+                <li>Composing existing LLM and predictive services into coherent journey experiences.</li>
+                <li>Defining new model requirements and partnering with platform teams to deliver them.</li>
+              </ul>
+
+              <div class="chip-row">
+                <span class="chip">Platform‑first mindset</span>
+                <span class="chip">API‑driven product</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- STRATEGY & TALKING POINTS -->
+      <section id="strategy" data-tags="strategy">
+        <div class="section-header">
+          <div>
+            <div class="section-title">How to Tell the Story as a Sales & Services AI PM</div>
+            <div class="section-subtitle">
+              Connect dealer AI, vehicle AI, and internal platforms into one coherent narrative.
+            </div>
+          </div>
+          <div class="pill-label">
+            <span class="dot"></span>
+            Interview cheat sheet
+          </div>
+        </div>
+
+        <div class="card" data-card="true" data-tags="strategy">
+          <div class="card-header">
+            <div class="card-title">Core narrative</div>
+          </div>
+          <div class="card-body">
+            Ford is already rich with AI components: conversation intelligence (Marchex), conversational engagement
+            (Impel, Podium), dealer co‑pilots (Insight Engage), vehicle‑side AI (Ford AI Assistant, BlueCruise), and
+            internal platforms (FordLLM, Mach1ML). The opportunity of the Sales & Services AI PM role is to make these
+            pieces feel like <strong>one continuous, predictive, personalized journey</strong> rather than separate tools.
+          </div>
+
+          <div class="detail-panel">
+            <div class="detail-title">Example product vision you can articulate</div>
+            <div>
+              "I'd build a Customer Intelligence Engine on top of CJP that continuously fuses signals from connected
+              vehicles, dealer interactions, and digital behavior to generate real‑time customer profiles. Those
+              profiles would power: (1) a proactive service engine that reaches out before issues surface, (2) a dealer
+              co‑pilot that surfaces next‑best actions during every interaction, and (3) loyalty personalization
+              that optimizes lifetime value. It would be built on Mach1ML, expose experiences via Ford AI Assistant and
+              dealer tools, and be governed by Ford's Trust Algorithm."
+            </div>
+
+            <div class="detail-grid">
+              <div>
+                <div class="detail-item-label">Business metrics</div>
+                <div class="detail-item-value">
+                  Lead‑to‑sale conversion, service revenue per VIN, churn / retention, NPS / CSAT, dealer adoption.
+                </div>
+              </div>
+              <div>
+                <div class="detail-item-label">Technical levers</div>
+                <div class="detail-item-value">
+                  CJP event model, Marchex intents, Impel/Podium transcripts, FordLLM orchestration, Mach1ML models.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <div class="section-subtitle" style="margin-bottom:6px;">Key personas & what they care about</div>
+            <div class="personas-grid">
+              <div class="persona-card">
+                <div class="persona-tag">Dealer leadership</div>
+                <div class="persona-title">GM / Dealer Principal</div>
+                <div>
+                  Wants simple, trusted views of performance and clear next‑best actions (e.g., Insight Engage).
+                  You emphasize revenue lift, service throughput, and simplicity.
+                </div>
+              </div>
+              <div class="persona-card">
+                <div class="persona-tag">FordDirect & Ford</div>
+                <div class="persona-title">FordDirect / Retail Ops</div>
+                <div>
+                  Cares about scalable solutions across ~3,000 dealers, consistent data back into CJP, and measurable
+                  network‑level uplift from AI partners.
+                </div>
+              </div>
+              <div class="persona-card">
+                <div class="persona-tag">End customer</div>
+                <div class="persona-title">Owner / Shopper</div>
+                <div>
+                  Expects instant, accurate assistance; proactive service; and seamless transitions between app,
+                  website, dealer, and in‑vehicle experiences, without repeating information.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-row">
+            <button class="cta-button-primary" id="scrollToDealers">
+              🎯 Focus on Dealer AI first
+            </button>
+            <button class="cta-button-secondary" id="scrollToCes">
+              🚗 Then bridge to vehicle & assistant
+            </button>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div>Prepared as of Feb 2026 based on public information and synthesized research.</div>
+          <div>Use this as your live "one‑pager" to talk through Ford's AI story in interviews.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+  <script>
+    // ---------- Navigation + scrollspy ----------
+    const navLinks = document.querySelectorAll(".nav-link");
+    const sections = document.querySelectorAll("main section");
+    document.body.setAttribute("data-view-mode", "pm");
+
+    function setActiveNav(targetId) {
+      navLinks.forEach((link) => {
+        link.classList.toggle("active", link.dataset.target === targetId);
+      });
+    }
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        const targetId = link.dataset.target;
+        const target = document.getElementById(targetId);
+        if (target) {
+          window.scrollTo({ top: target.offsetTop - 14, behavior: "smooth" });
+          setActiveNav(targetId);
+        }
+      });
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveNav(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0.2 }
+    );
+    sections.forEach((section) => observer.observe(section));
+
+    // ---------- Filters + search ----------
+    const filterPills = document.querySelectorAll(".filter-pill");
+    const searchInput = document.getElementById("searchInput");
+    const searchClear = document.getElementById("searchClear");
+    const cards = document.querySelectorAll("[data-card='true']");
+    const noResults = document.getElementById("noResults");
+    let activeFilter = "all";
+
+    function matches(card, query) {
+      const tags = card.dataset.tags || "";
+      const text = card.innerText.toLowerCase();
+      const tagMatch = activeFilter === "all" || tags.includes(activeFilter);
+      const searchMatch = !query || text.includes(query);
+      return tagMatch && searchMatch;
+    }
+
+    function applyFilters() {
+      const query = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+      cards.forEach((card) => {
+        if (matches(card, query)) {
+          card.style.display = "";
+          card.style.opacity = 1;
+          visible++;
+        } else {
+          card.style.display = "none";
+        }
+      });
+      noResults.style.display = visible === 0 ? "block" : "none";
+    }
+
+    filterPills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        filterPills.forEach((p) => {
+          p.classList.remove("active");
+          p.setAttribute("aria-pressed", "false");
+        });
+        pill.classList.add("active");
+        pill.setAttribute("aria-pressed", "true");
+        activeFilter = pill.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    searchInput.addEventListener("input", applyFilters);
+    searchClear.addEventListener("click", () => {
+      searchInput.value = "";
+      applyFilters();
+      searchInput.focus();
+    });
+
+    // ---------- PM vs Systems toggle ----------
+    const modeButtons = document.querySelectorAll("#viewMode .tab-btn");
+    modeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        modeButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const mode = btn.dataset.mode;
+        document.body.setAttribute("data-view-mode", mode);
+      });
+    });
+
+    // ---------- CTA scroll shortcuts ----------
+    document.getElementById("scrollToDealers").addEventListener("click", () => {
+      const sec = document.getElementById("dealers");
+      window.scrollTo({ top: sec.offsetTop - 14, behavior: "smooth" });
+      setActiveNav("dealers");
+    });
+    document.getElementById("scrollToCes").addEventListener("click", () => {
+      const sec = document.getElementById("ces");
+      window.scrollTo({ top: sec.offsetTop - 14, behavior: "smooth" });
+      setActiveNav("ces");
+    });
+
+    // ---------- Scroll progress + back to top ----------
+    const progressBar = document.getElementById("progressBar");
+    const backToTop = document.getElementById("backToTop");
+
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = `${pct}%`;
+      if (scrollTop > 600) {
+        backToTop.classList.add("show");
+      } else {
+        backToTop.classList.remove("show");
+      }
+    }
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    updateProgress();
+
+    backToTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setActiveNav("overview");
+    });
+  </script>
+</body>
+</html>
