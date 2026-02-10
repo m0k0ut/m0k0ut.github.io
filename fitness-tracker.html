@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit & Strong 10K Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #2563eb;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .streak-display {
+            font-size: 2.5em;
+            margin: 15px 0;
+        }
+        
+        .streak-text {
+            color: #64748b;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .badges {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .badges h3 {
+            color: #475569;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .badge-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            flex: 1;
+            min-width: 120px;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .badge.earned {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            transform: scale(1.05);
+        }
+        
+        .badge.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+        
+        .badge-icon {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+        
+        .badge-label {
+            font-size: 0.85em;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        .badge-date {
+            font-size: 0.7em;
+            color: #10b981;
+            margin-top: 5px;
+        }
+        
+        .progress {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .progress h3 {
+            color: #475569;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .progress-bar-container {
+            background: #e2e8f0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .progress-message {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .week-view {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+        
+        .day-bar {
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .day-bar-label {
+            font-size: 0.8em;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        
+        .day-bar-chart {
+            background: #e2e8f0;
+            height: 80px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .day-bar-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+            transition: height 0.5s ease;
+        }
+        
+        .day-bar-count {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #1e293b;
+        }
+        
+        .plan {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .plan h3 {
+            color: #475569;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .day-card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .day-title {
+            font-size: 1.3em;
+            color: #2563eb;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .session {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        
+        .session.run {
+            border-left-color: #3b82f6;
+        }
+        
+        .session.swim {
+            border-left-color: #06b6d4;
+        }
+        
+        .session.gym {
+            border-left-color: #f59e0b;
+        }
+        
+        .session.completed {
+            background: #f0fdf4;
+            border-left-width: 6px;
+        }
+        
+        .session-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .session-checkbox {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .session-icon {
+            font-size: 1.5em;
+        }
+        
+        .session-info {
+            flex: 1;
+        }
+        
+        .session-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1.05em;
+        }
+        
+        .session-time {
+            color: #64748b;
+            font-size: 0.85em;
+        }
+        
+        .session-description {
+            color: #64748b;
+            font-size: 0.9em;
+            margin: 8px 0 8px 40px;
+            line-height: 1.4;
+        }
+        
+        .session-notes {
+            margin: 10px 0 0 40px;
+        }
+        
+        .notes-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-family: inherit;
+            margin-bottom: 8px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .notes-input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        
+        .save-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .save-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 1000;
+            text-align: center;
+            display: none;
+        }
+        
+        .celebration.show {
+            display: block;
+            animation: popIn 0.5s ease;
+        }
+        
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        .celebration-icon {
+            font-size: 5em;
+            margin-bottom: 15px;
+        }
+        
+        .celebration-text {
+            font-size: 1.5em;
+            color: #1e293b;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .celebration-subtext {
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        
+        .close-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .streak-display {
+                font-size: 2em;
+            }
+            
+            .badge-container {
+                gap: 10px;
+            }
+            
+            .badge {
+                min-width: 80px;
+                padding: 15px 10px;
+            }
+            
+            .badge-icon {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏃‍♂️ Fit & Strong 10K Plan</h1>
+            <div class="streak-display" id="streakDisplay">🔥 0 days</div>
+            <div class="streak-text" id="streakMessage">Start your journey today!</div>
+        </div>
+        
+        <div class="badges">
+            <h3>🏆 Achievement Badges</h3>
+            <div class="badge-container">
+                <div class="badge locked" data-milestone="3">
+                    <div class="badge-icon">🥉</div>
+                    <div class="badge-label">3-Day Streak</div>
+                    <div class="badge-date" id="badge-3"></div>
+                </div>
+                <div class="badge locked" data-milestone="7">
+                    <div class="badge-icon">🥈</div>
+                    <div class="badge-label">7-Day Streak</div>
+                    <div class="badge-date" id="badge-7"></div>
+                </div>
+                <div class="badge locked" data-milestone="14">
+                    <div class="badge-icon">🥇</div>
+                    <div class="badge-label">14-Day Streak</div>
+                    <div class="badge-date" id="badge-14"></div>
+                </div>
+                <div class="badge locked" data-milestone="21">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-label">21-Day Streak</div>
+                    <div class="badge-date" id="badge-21"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress">
+            <h3>📊 This Week's Progress</h3>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBar">0%</div>
+            </div>
+            <div class="progress-message" id="progressMessage">Let's get started! 💪</div>
+            
+            <div class="week-view" id="weekView"></div>
+        </div>
+        
+        <div class="plan">
+            <h3>📅 Your Training Plan</h3>
+            <div id="planContainer"></div>
+        </div>
+    </div>
+    
+    <div class="celebration" id="celebration">
+        <div class="celebration-icon" id="celebrationIcon">🎉</div>
+        <div class="celebration-text" id="celebrationText">Awesome!</div>
+        <div class="celebration-subtext" id="celebrationSubtext">You're crushing it!</div>
+        <button class="close-btn" onclick="closeCelebration()">Continue</button>
+    </div>
+    
+    <script>
+        const PLAN = {
+            "Monday": [
+                {id: "mon-am", time: "AM", type: "run", title: "Easy Run", duration: 30, description: "Conversational pace, comfortable"},
+                {id: "mon-pm", time: "PM", type: "gym", title: "Gym A - Lower + Core", duration: 30, description: "3 rounds: Goblet squat (8-12), RDL (8-12), Lunges (8-10/side), Plank (45-60s)"}
+            ],
+            "Tuesday": [
+                {id: "tue-am", time: "AM", type: "swim", title: "Easy Swim", duration: 30, description: "Technique focus + steady pace"},
+                {id: "tue-pm", time: "PM", type: "run", title: "VO2 Max Intervals", duration: 30, description: "Warm-up 5min, then 4×3min hard/2min easy, cooldown"}
+            ],
+            "Wednesday": [
+                {id: "wed-am", time: "AM", type: "run", title: "Easy Run", duration: 30, description: "Conversational pace, comfortable"},
+                {id: "wed-pm", time: "PM", type: "gym", title: "Gym B - Upper + Posterior", duration: 30, description: "3 rounds: Row/Pull-down (8-12), Push-ups/DB bench (8-12), Hip thrust (10-15), Pallof press (10-12/side)"}
+            ],
+            "Thursday": [
+                {id: "thu-am", time: "AM", type: "swim", title: "Steady Swim", duration: 30, description: "Steady moderate pace"},
+                {id: "thu-pm", time: "PM", type: "run", title: "Tempo Run", duration: 30, description: "10min easy + 15min comfortably hard + 5min easy"}
+            ],
+            "Friday": [
+                {id: "fri-am", time: "AM", type: "run", title: "Easy Run/Swim", duration: 30, description: "Easy run or swim if legs are tired"},
+                {id: "fri-pm", time: "PM", type: "gym", title: "Gym A - Lower + Core", duration: 30, description: "3 rounds: Goblet squat (8-12), RDL (8-12), Lunges (8-10/side), Plank (45-60s)"}
+            ],
+            "Saturday": [
+                {id: "sat-am", time: "AM", type: "run", title: "Long Run", duration: 40, description: "Start at 35-40min, add 5min each week toward 70-75min"},
+                {id: "sat-pm", time: "PM", type: "swim", title: "Recovery Swim", duration: 30, description: "Easy pace for recovery"}
+            ],
+            "Sunday": [
+                {id: "sun-am", time: "AM", type: "swim", title: "Easy Swim/Walk", duration: 30, description: "Easy swim or brisk walk"},
+                {id: "sun-pm", time: "PM", type: "gym", title: "Gym B Light + Mobility", duration: 30, description: "Lighter version of Gym B + 5min mobility"}
+            ]
+        };
+        
+        const ICONS = {
+            run: "🏃",
+            swim: "🏊",
+            gym: "💪"
+        };
+        
+        function getDateKey(date = new Date()) {
+            return date.toISOString().split('T')[0];
+        }
+        
+        function getDayName(date = new Date()) {
+            return date.toLocaleDateString('en-US', { weekday: 'long' });
+        }
+        
+        function getWeekStart(date = new Date()) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+        
+        function loadCompletions() {
+            const saved = localStorage.getItem('completions');
+            return saved ? JSON.parse(saved) : {};
+        }
+        
+        function saveCompletion(sessionId, completed) {
+            const completions = loadCompletions();
+            const dateKey = getDateKey();
+            if (!completions[dateKey]) completions[dateKey] = {};
+            completions[dateKey][sessionId] = completed;
+            localStorage.setItem('completions', JSON.stringify(completions));
+            updateStreak();
+            updateProgress();
+            checkMilestones();
+        }
+        
+        function loadNote(sessionId) {
+            return localStorage.getItem(`note_${sessionId}`) || '';
+        }
+        
+        function saveNote(sessionId, note) {
+            localStorage.setItem(`note_${sessionId}`, note);
+        }
+        
+        function calculateStreak() {
+            const completions = loadCompletions();
+            let streak = 0;
+            let currentDate = new Date();
+            
+            while (true) {
+                const dateKey = getDateKey(currentDate);
+                const daySessions = completions[dateKey];
+                
+                if (daySessions && Object.values(daySessions).some(v => v)) {
+                    streak++;
+                    currentDate.setDate(currentDate.getDate() - 1);
+                } else if (streak === 0 && dateKey === getDateKey()) {
+                    currentDate.setDate(currentDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+        
+        function updateStreak() {
+            const streak = calculateStreak();
+            localStorage.setItem('currentStreak', streak);
+            
+            document.getElementById('streakDisplay').textContent = `🔥 ${streak} days`;
+            
+            let message = '';
+            if (streak === 0) message = 'Start your journey today!';
+            else if (streak < 3) message = `${3 - streak} days to first badge!`;
+            else if (streak < 7) message = `${7 - streak} days to next badge!`;
+            else if (streak < 14) message = `${14 - streak} days to next badge!`;
+            else if (streak < 21) message = `${21 - streak} days to final badge!`;
+            else message = 'You\'re a champion! 🏆';
+            
+            document.getElementById('streakMessage').textContent = message;
+        }
+        
+        function checkMilestones() {
+            const streak = calculateStreak();
+            const milestones = [3, 7, 14, 21];
+            const earned = JSON.parse(localStorage.getItem('badges') || '{}');
+            
+            milestones.forEach(milestone => {
+                const badge = document.querySelector(`.badge[data-milestone="${milestone}"]`);
+                if (streak >= milestone) {
+                    if (!earned[milestone]) {
+                        earned[milestone] = getDateKey();
+                        localStorage.setItem('badges', JSON.stringify(earned));
+                        showCelebration(milestone);
+                    }
+                    badge.classList.remove('locked');
+                    badge.classList.add('earned');
+                    document.getElementById(`badge-${milestone}`).textContent = 
+                        `Earned ${new Date(earned[milestone]).toLocaleDateString()}`;
+                } else {
+                    badge.classList.add('locked');
+                    badge.classList.remove('earned');
+                    document.getElementById(`badge-${milestone}`).textContent = '';
+                }
+            });
+        }
+        
+        function showCelebration(milestone) {
+            const icons = {3: '🥉', 7: '🥈', 14: '🥇', 21: '🏆'};
+            const messages = {
+                3: 'First Badge Unlocked!',
+                7: 'One Week Strong!',
+                14: 'Two Weeks Champion!',
+                21: 'Three Week Legend!'
+            };
+            
+            document.getElementById('celebrationIcon').textContent = icons[milestone];
+            document.getElementById('celebrationText').textContent = messages[milestone];
+            document.getElementById('celebrationSubtext').textContent = 
+                `You've maintained a ${milestone}-day streak! Keep it up! 🎉`;
+            document.getElementById('celebration').classList.add('show');
+        }
+        
+        function closeCelebration() {
+            document.getElementById('celebration').classList.remove('show');
+        }
+        
+        function updateProgress() {
+            const completions = loadCompletions();
+            const weekStart = getWeekStart();
+            const weekData = {};
+            let totalCompleted = 0;
+            
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + i);
+                const dateKey = getDateKey(date);
+                const dayName = getDayName(date);
+                const daySessions = completions[dateKey] || {};
+                const completed = Object.values(daySessions).filter(v => v).length;
+                weekData[dayName] = completed;
+                totalCompleted += completed;
+            }
+            
+            const percentage = Math.round((totalCompleted / 14) * 100);
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressBar').textContent = `${totalCompleted}/14 (${percentage}%)`;
+            
+            let message = '';
+            let color = '';
+            if (totalCompleted === 0) {
+                message = 'Let\'s get started! 💪';
+                color = '#64748b';
+            } else if (totalCompleted < 4) {
+                message = 'Good start! Keep going! 🌱';
+                color = '#ef4444';
+            } else if (totalCompleted < 8) {
+                message = 'You\'re building momentum! 🚀';
+                color = '#f59e0b';
+            } else if (totalCompleted < 12) {
+                message = 'Fantastic progress! 🌟';
+                color = '#eab308';
+            } else {
+                message = 'You\'re on fire! 🔥';
+                color = '#10b981';
+            }
+            
+            document.getElementById('progressMessage').textContent = message;
+            document.getElementById('progressMessage').style.color = color;
+            
+            renderWeekView(weekData);
+        }
+        
+        function renderWeekView(weekData) {
+            const weekView = document.getElementById('weekView');
+            weekView.innerHTML = '';
+            
+            Object.entries(weekData).forEach(([day, count]) => {
+                const barDiv = document.createElement('div');
+                barDiv.className = 'day-bar';
+                
+                const height = (count / 2) * 100;
+                
+                barDiv.innerHTML = `
+                    <div class="day-bar-label">${day.substring(0, 3)}</div>
+                    <div class="day-bar-chart">
+                        <div class="day-bar-fill" style="height: ${height}%"></div>
+                        <div class="day-bar-count">${count}</div>
+                    </div>
+                `;
+                
+                weekView.appendChild(barDiv);
+            });
+        }
+        
+        function renderPlan() {
+            const container = document.getElementById('planContainer');
+            const completions = loadCompletions()[getDateKey()] || {};
+            
+            Object.entries(PLAN).forEach(([day, sessions]) => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'day-card';
+                
+                let sessionsHTML = '';
+                sessions.forEach(session => {
+                    const completed = completions[session.id] || false;
+                    const note = loadNote(session.id);
+                    
+                    sessionsHTML += `
+                        <div class="session ${session.type} ${completed ? 'completed' : ''}" data-id="${session.id}">
+                            <div class="session-header">
+                                <input type="checkbox" class="session-checkbox" 
+                                       ${completed ? 'checked' : ''} 
+                                       onchange="toggleSession('${session.id}', this.checked)">
+                                <span class="session-icon">${ICONS[session.type]}</span>
+                                <div class="session-info">
+                                    <div class="session-title">${session.title}</div>
+                                    <div class="session-time">${session.time} • ${session.duration} min</div>
+                                </div>
+                            </div>
+                            <div class="session-description">${session.description}</div>
+                            <div class="session-notes">
+                                <input type="text" class="notes-input" 
+                                       placeholder="Add notes..." 
+                                       value="${note}"
+                                       id="note-${session.id}">
+                                <button class="save-btn" onclick="saveSessionNote('${session.id}')">💾 Save Note</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                dayCard.innerHTML = `
+                    <div class="day-title">${day}</div>
+                    ${sessionsHTML}
+                `;
+                
+                container.appendChild(dayCard);
+            });
+        }
+        
+        function toggleSession(sessionId, completed) {
+            saveCompletion(sessionId, completed);
+            const sessionEl = document.querySelector(`.session[data-id="${sessionId}"]`);
+            if (completed) {
+                sessionEl.classList.add('completed');
+            } else {
+                sessionEl.classList.remove('completed');
+            }
+        }
+        
+        function saveSessionNote(sessionId) {
+            const noteInput = document.getElementById(`note-${sessionId}`);
+            saveNote(sessionId, noteInput.value);
+            
+            noteInput.style.borderColor = '#10b981';
+            setTimeout(() => {
+                noteInput.style.borderColor = '#e2e8f0';
+            }, 1000);
+        }
+        
+        function init() {
+            renderPlan();
+            updateStreak();
+            updateProgress();
+            checkMilestones();
+        }
+        
+        init();
+    </script>
+</body>
+</html>
