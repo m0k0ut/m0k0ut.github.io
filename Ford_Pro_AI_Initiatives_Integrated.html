@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ford Pro AI Initiatives: Integrated Service & Maintenance Strategy</title>
+  <style>
+    :root {
+      --ford-blue: #003478;
+      --ford-blue-2: #0057b8;
+      --ink: #0f1c2d;
+      --muted: #4d5f76;
+      --bg: #f3f7fc;
+      --surface: #ffffff;
+      --line: #d8e2ef;
+      --success: #0f7a4f;
+      --warning: #9a6a00;
+      --radius: 14px;
+      --shadow: 0 10px 25px rgba(0, 40, 90, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 500px at 90% -10%, #deebff 0%, rgba(222,235,255,0) 70%),
+        radial-gradient(900px 500px at -10% -20%, #e8f1ff 0%, rgba(232,241,255,0) 72%),
+        var(--bg);
+      font: 15px/1.6 "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    a { color: var(--ford-blue-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: linear-gradient(180deg, #03204b 0%, #092a5d 55%, #0f356e 100%);
+      color: #e8f1ff;
+      padding: 18px 14px;
+      border-right: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .brand {
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 14px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #b8d5ff;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: #e8f1ff;
+      line-height: 1.4;
+    }
+
+    .sidebar .kpi-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-box {
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 10px;
+      padding: 8px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .kpi-box .num {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+
+    .kpi-box .label {
+      font-size: 11px;
+      color: #c7dbfb;
+    }
+
+    .controls {
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(255,255,255,0.07);
+      margin-bottom: 12px;
+    }
+
+    .controls input[type="search"] {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.96);
+      color: #15325c;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .view-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .view-toggle button,
+    .nav button,
+    .chip-row button,
+    .top-actions button {
+      border: 1px solid transparent;
+      background: #ffffff;
+      color: #15325c;
+      border-radius: 10px;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .view-toggle button {
+      padding: 7px 8px;
+      font-size: 12px;
+    }
+
+    .view-toggle button.active {
+      background: #d9e9ff;
+      border-color: #9ec2ff;
+      font-weight: 600;
+    }
+
+    .nav { display: grid; gap: 6px; }
+
+    .nav button {
+      text-align: left;
+      width: 100%;
+      padding: 8px 9px;
+      font-size: 13px;
+    }
+
+    .nav button.active {
+      background: #d9e9ff;
+      border-color: #9ec2ff;
+      font-weight: 600;
+    }
+
+    .main {
+      padding: 18px 22px 40px;
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .top-actions button {
+      padding: 8px 10px;
+      border-color: var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      font-size: 13px;
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #0c2d5f 0%, #0f4a97 60%, #2b6ec6 100%);
+      color: #f3f8ff;
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.2);
+      margin-bottom: 12px;
+    }
+
+    .hero h2 {
+      margin: 0 0 6px;
+      font-size: 26px;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 1000px;
+      color: #d9eaff;
+    }
+
+    .chip-row {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip-row button {
+      padding: 6px 10px;
+      font-size: 12px;
+      border-color: #a3c6f8;
+      background: #f2f8ff;
+    }
+
+    .chip-row button.active {
+      background: #d6e7ff;
+      border-color: #87b3f4;
+      font-weight: 600;
+    }
+
+    section {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      margin: 12px 0;
+    }
+
+    section h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      color: #123e76;
+    }
+
+    .subtle { color: var(--muted); font-size: 13px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fbfdff;
+    }
+
+    .card h4 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      color: #123e76;
+    }
+
+    .domain {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid #b8d2f5;
+      background: #eaf3ff;
+      color: #164171;
+      margin-bottom: 7px;
+    }
+
+    .outcome, .delivery {
+      font-size: 13px;
+      margin-top: 8px;
+      border-top: 1px dashed #ccdbef;
+      padding-top: 8px;
+    }
+
+    .delivery { display: none; }
+    body.view-delivery .delivery { display: block; }
+    body.view-delivery .outcome { display: none; }
+
+    .matrix {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .matrix th,
+    .matrix td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .matrix th {
+      background: #edf4ff;
+      color: #123e76;
+      font-weight: 600;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin: 8px 0;
+      background: #fcfeff;
+    }
+
+    summary { cursor: pointer; font-weight: 600; color: #123e76; }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .t-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #f8fbff;
+    }
+
+    .t-item .year {
+      font-weight: 700;
+      color: #0e4485;
+      font-size: 13px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      margin-left: 6px;
+      border: 1px solid;
+    }
+
+    .b-high { color: var(--success); border-color: #93d8ba; background: #e8f7f0; }
+    .b-med { color: var(--warning); border-color: #f2d08d; background: #fff7e7; }
+
+    .hidden-by-filter { display: none !important; }
+
+    .footer-note {
+      color: #5b6f86;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .timeline { grid-template-columns: 1fr; }
+      .hero h2 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body class="view-outcome">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>Ford Pro AI Strategy</h1>
+        <p>Integrated view across dealer AI, vehicle AI, internal platforms, and service operations.</p>
+      </div>
+
+      <div class="kpi-strip">
+        <div class="kpi-box">
+          <div class="num">5</div>
+          <div class="label">Service initiatives</div>
+        </div>
+        <div class="kpi-box">
+          <div class="num">3</div>
+          <div class="label">Capability layers</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <input id="docSearch" type="search" placeholder="Search topics" aria-label="Search topics" />
+        <div class="view-toggle" id="viewToggle">
+          <button data-view="outcome" class="active" type="button">Business View</button>
+          <button data-view="delivery" type="button">Delivery View</button>
+        </div>
+      </div>
+
+      <nav class="nav" id="toc"></nav>
+
+      <p class="footer-note"></p>
+    </aside>
+
+    <main class="main" id="mainContent">
+      <div class="top-actions">
+        <button id="homeBtn" type="button">Home</button>
+        <button id="expandAll" type="button">Open all details</button>
+        <button id="collapseAll" type="button">Close all details</button>
+      </div>
+
+      <header class="hero" id="executive-summary" data-domain="strategy">
+        <h2>Ford Pro AI Initiatives: Unified Strategic View</h2>
+        <p>
+          Ford is building an integrated AI stack where dealer interactions, connected vehicle intelligence, and enterprise AI platforms reinforce each other.
+          The strategic opportunity for Ford Pro is to convert this stack into measurable uptime, faster repair cycles, and stronger lifetime fleet value.
+        </p>
+        <div class="chip-row" id="domainFilter">
+          <button class="active" data-domain="all" type="button">All domains</button>
+          <button data-domain="dealer" type="button">Dealer AI</button>
+          <button data-domain="vehicle" type="button">Vehicle AI</button>
+          <button data-domain="platform" type="button">AI Platforms</button>
+          <button data-domain="service" type="button">Service Ops</button>
+          <button data-domain="strategy" type="button">Strategy</button>
+        </div>
+      </header>
+
+      <section id="initiative-landscape" data-domain="strategy">
+        <h3>Initiative Landscape</h3>
+        <p class="subtle">A coherent model of where each initiative contributes and how value compounds across the system.</p>
+        <div class="grid-3">
+          <article class="card" data-domain="dealer">
+            <span class="domain">Dealer AI</span>
+            <h4>FordDirect Ecosystem</h4>
+            <p>Marchex, Impel, Podium, and Insight Engage expand conversational intelligence, customer engagement, and decision support at dealership level.</p>
+            <div class="outcome"><strong>Business implication:</strong> Higher lead conversion, stronger service lane utilization, and lower response latency across the customer journey.</div>
+            <div class="delivery"><strong>Delivery implication:</strong> Standardize event contracts between dealer tools and CJP to avoid fragmented customer state and duplicate workflows.</div>
+          </article>
+          <article class="card" data-domain="vehicle">
+            <span class="domain">Vehicle AI</span>
+            <h4>Ford AI Assistant + UEV + BlueCruise</h4>
+            <p>Ford is moving from app-first assistant experiences to in-vehicle deployment, supported by centralized compute and ongoing ADAS progression.</p>
+            <div class="outcome"><strong>Business implication:</strong> New service and subscription surfaces with context-aware personalization tied to usage and vehicle health.</div>
+            <div class="delivery"><strong>Delivery implication:</strong> Align assistant APIs, telemetry schemas, and OTA release planning with downstream service use cases.</div>
+          </article>
+          <article class="card" data-domain="platform">
+            <span class="domain">AI Platforms</span>
+            <h4>FordLLM + Mach1ML</h4>
+            <p>FordLLM provides secure enterprise LLM access while Mach1ML provides MLOps standardization for predictive and generative model delivery.</p>
+            <div class="outcome"><strong>Business implication:</strong> Faster product iteration and lower build cost through platform reuse instead of isolated one-off stacks.</div>
+            <div class="delivery"><strong>Delivery implication:</strong> Use platform-first architecture and reserve bespoke models for high-differentiation problems.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="service-transformation" data-domain="service">
+        <h3>Ford Pro Service Transformation Portfolio</h3>
+        <p class="subtle">Five coordinated initiatives that convert connected-vehicle data, dealer activity, and platform intelligence into measurable service outcomes.</p>
+
+        <div class="grid-2">
+          <article class="card" data-domain="service">
+            <span class="domain">Service Architecture</span>
+            <h4>How these initiatives work as one system</h4>
+            <p>
+              The portfolio is most effective when run as a closed loop rather than five separate pilots. Diagnostic, work-order, fleet analytics,
+              inspection, and knowledge capture should all publish to a shared service event model.
+            </p>
+            <div class="outcome">
+              <strong>Business view:</strong> each completed repair improves future diagnostics, repair planning, and preventive scheduling at network scale.
+            </div>
+            <div class="delivery">
+              <strong>Delivery view:</strong> standardize entities across all initiatives: VIN, symptom taxonomy, DTC, repair code, part, labor time, claim outcome.
+            </div>
+          </article>
+          <article class="card" data-domain="service">
+            <span class="domain">Service Governance</span>
+            <h4>Control points required for scale</h4>
+            <p>
+              Use central governance for model quality, technician trust, and financial accountability. Every AI recommendation should carry traceable evidence,
+              confidence level, and post-repair outcome status.
+            </p>
+            <div class="outcome">
+              <strong>Business view:</strong> keeps adoption high and limits cost leakage from low-quality automation in labor, parts, and warranty decisions.
+            </div>
+            <div class="delivery">
+              <strong>Delivery view:</strong> enforce a release gate for every model update: quality threshold, bias check, explainability check, rollback path.
+            </div>
+          </article>
+        </div>
+
+        <details open>
+          <summary>1. Diagnostic Copilot: Deep Operating Design</summary>
+          <p>
+            The diagnostic copilot is the front door of the service AI stack. It reduces triage variance by fusing vehicle telemetry with OEM knowledge and
+            prior network repair outcomes to generate ranked root-cause pathways.
+          </p>
+          <ul>
+            <li><strong>Context:</strong> technician productivity is constrained by fragmented systems and uneven expertise across sites.</li>
+            <li><strong>Data foundation:</strong> DTC history, live/near-live telemetry trends, mileage, prior repairs, TSBs, recalls, model-year failure patterns.</li>
+            <li><strong>Workflow:</strong> symptom capture -> evidence retrieval -> ranked hypotheses -> procedural guidance -> parts/labor preview -> outcome feedback.</li>
+            <li><strong>Decision support behavior:</strong> recommendations should include confidence, evidence sources, and suggested next diagnostic test.</li>
+            <li><strong>Human-in-loop boundary:</strong> technician validates root cause and can reject suggestions with structured reason codes.</li>
+          </ul>
+          <div class="outcome">
+            <strong>KPI stack:</strong> diagnostic cycle time, first-time fix rate, repeat repair within 30 days, technician adoption by tenure tier.
+          </div>
+          <div class="delivery">
+            <strong>Implementation risks:</strong> low retrieval precision, stale OEM documents, weak confidence calibration, and insufficient telemetry granularity by subsystem.
+          </div>
+        </details>
+
+        <details open>
+          <summary>2. Intelligent Work Order & Repair Plan Generation: Deep Operating Design</summary>
+          <p>
+            Work-order generation converts diagnostics and technician findings into operational execution objects. This is the control point where AI recommendations
+            become scheduled labor, ordered parts, and customer-facing commitments.
+          </p>
+          <ul>
+            <li><strong>Context:</strong> manual order construction creates delay, inconsistency, and billing/warranty disputes.</li>
+            <li><strong>Data foundation:</strong> symptom capture, diagnostic outputs, parts catalog, labor benchmarks, warranty rules, service history.</li>
+            <li><strong>Workflow:</strong> trigger from alert/complaint -> structured extraction -> AI draft order -> advisor review -> DMS dispatch -> completion update.</li>
+            <li><strong>Operational policy:</strong> lock required fields for compliance while preserving advisor override authority for edge cases.</li>
+            <li><strong>Commercial layer:</strong> include probability-weighted upsell opportunities tied to actual maintenance condition, not generic promotion logic.</li>
+          </ul>
+          <div class="outcome">
+            <strong>KPI stack:</strong> order drafting time, dispatch latency, labor estimate accuracy, warranty claim acceptance rate, billing adjustments per repair.
+          </div>
+          <div class="delivery">
+            <strong>Implementation risks:</strong> inaccurate extraction from technician voice notes, taxonomy drift between facilities, brittle DMS integration pathways.
+          </div>
+        </details>
+
+        <details open>
+          <summary>3. Conversational Fleet Health Analyst: Deep Operating Design</summary>
+          <p>
+            The fleet health analyst is the managerial control layer for preventive maintenance decisions. It should answer complex operational questions with
+            auditable logic and recommended actions that can be immediately scheduled.
+          </p>
+          <ul>
+            <li><strong>Context:</strong> dashboard-heavy workflows slow intervention and hide cross-vehicle patterns.</li>
+            <li><strong>Data foundation:</strong> Bigtable telemetry, service events, mileage cohorts, route profile, utilization context, cost and downtime history.</li>
+            <li><strong>Workflow:</strong> natural-language query -> structured query plan -> result synthesis -> action recommendation -> watchlist automation.</li>
+            <li><strong>Narrative quality:</strong> recommendations should explain why a cohort is high risk and what action window minimizes downtime cost.</li>
+            <li><strong>Action continuity:</strong> analyst outputs should open directly into scheduling and work-order creation without manual re-entry.</li>
+          </ul>
+          <div class="outcome">
+            <strong>KPI stack:</strong> time-to-decision, preventive service completion rate, roadside event reduction, avoided downtime hours, cost-per-mile stability.
+          </div>
+          <div class="delivery">
+            <strong>Implementation risks:</strong> text-to-query semantic drift, overconfident recommendations, and weak explainability for fleet managers under time pressure.
+          </div>
+        </details>
+
+        <details open>
+          <summary>4. Computer Vision Digital Vehicle Inspection: Deep Operating Design</summary>
+          <p>
+            Digital inspection makes condition assessment consistent and machine-readable across daily checks, pre-service intake, and post-service validation.
+            It complements sensor telemetry with visual evidence and creates defensible audit trails.
+          </p>
+          <ul>
+            <li><strong>Context:</strong> manual inspections are subjective, inconsistent, and difficult to aggregate for pattern analytics.</li>
+            <li><strong>Data foundation:</strong> smartphone/depot images, timestamp and geotags, sensor telemetry, prior inspection images, repair outcomes.</li>
+            <li><strong>Workflow:</strong> image capture -> visual detection/classification -> severity scoring -> multimodal synthesis -> annotated report -> trend tracking.</li>
+            <li><strong>Evidence model:</strong> every detection should retain source image snippets, confidence, and versioned model metadata for dispute handling.</li>
+            <li><strong>Operational linkage:</strong> critical detections should auto-generate service flags and scheduling prompts when thresholds are crossed.</li>
+          </ul>
+          <div class="outcome">
+            <strong>KPI stack:</strong> inspection time per vehicle, detection precision/recall by damage type, claim dispute resolution time, preventive trigger conversion.
+          </div>
+          <div class="delivery">
+            <strong>Implementation risks:</strong> poor image quality at edge sites, class imbalance by damage type, and false positives that create unnecessary service events.
+          </div>
+        </details>
+
+        <details open>
+          <summary>5. Knowledge Capture & Technician Learning Engine: Deep Operating Design</summary>
+          <p>
+            Knowledge capture is the compounding layer of the service system. It converts repair execution into institutional intelligence and reduces dependency
+            on local expert concentration.
+          </p>
+          <ul>
+            <li><strong>Context:</strong> technician turnover erodes network capability and makes resolution quality uneven across facilities.</li>
+            <li><strong>Data foundation:</strong> work orders, free-text notes, diagnostic traces, parts substitutions, labor actuals, repair outcome labels.</li>
+            <li><strong>Workflow:</strong> extraction -> ontology mapping -> knowledge graph updates -> contextual retrieval -> scenario-based learning content.</li>
+            <li><strong>Learning design:</strong> role-aware guidance by technician seniority, vehicle class, and recurring failure domains.</li>
+            <li><strong>Network effect:</strong> every completed repair enriches retrieval quality for future cases at other locations.</li>
+          </ul>
+          <div class="outcome">
+            <strong>KPI stack:</strong> repeat-issue resolution time, onboarding duration for new technicians, cross-site variance in repair quality, guidance utilization.
+          </div>
+          <div class="delivery">
+            <strong>Implementation risks:</strong> noisy note extraction, weak ontology governance, and insufficient feedback loops from final repair outcomes.
+          </div>
+        </details>
+
+        <table class="matrix" aria-label="Initiative impact matrix">
+          <thead>
+            <tr>
+              <th>Initiative</th>
+              <th>Primary User</th>
+              <th>Core Data Inputs</th>
+              <th>Primary KPI Signals</th>
+              <th>Critical Dependency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Diagnostic Copilot</td>
+              <td>Technicians</td>
+              <td>DTCs, telemetry, OEM docs, TSBs</td>
+              <td><span class="badge b-high">High</span> diagnostic cycle time, first-time fix</td>
+              <td>High-quality retrieval + evidence traceability</td>
+            </tr>
+            <tr>
+              <td>Work Order Generator</td>
+              <td>Service advisors</td>
+              <td>Voice/text findings, alerts, parts catalogs</td>
+              <td><span class="badge b-med">Medium-High</span> drafting time, claim acceptance, dispatch latency</td>
+              <td>Robust extraction and DMS integration patterns</td>
+            </tr>
+            <tr>
+              <td>Fleet Health Analyst</td>
+              <td>Fleet managers</td>
+              <td>Bigtable telemetry, service history, cost data</td>
+              <td><span class="badge b-high">High</span> preventive completion and avoided downtime</td>
+              <td>Accurate text-to-query + explainable recommendation logic</td>
+            </tr>
+            <tr>
+              <td>CV Inspection</td>
+              <td>Drivers, technicians</td>
+              <td>Images, camera feeds, sensor data</td>
+              <td><span class="badge b-med">Medium-High</span> detection quality, dispute cycle-time</td>
+              <td>Reliable field image capture and confidence calibration</td>
+            </tr>
+            <tr>
+              <td>Knowledge Engine</td>
+              <td>Technicians, trainers</td>
+              <td>Work orders, notes, repair outcomes</td>
+              <td><span class="badge b-high">High</span> resolution time for recurring failures, onboarding speed</td>
+              <td>Consistent ontology + outcome feedback loops</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="grid-2" style="margin-top:12px;">
+          <article class="card" data-domain="service">
+            <span class="domain">Cross-Initiative Dependencies</span>
+            <h4>Data and platform prerequisites</h4>
+            <ul>
+              <li>Unified VIN-level identity and event schema across dealer, telematics, and service systems.</li>
+              <li>Shared retrieval and knowledge services to prevent duplicate vector stores and conflicting taxonomies.</li>
+              <li>Versioned model registry with per-site rollout controls and rollback automation.</li>
+              <li>Closed-loop labeling from completed repairs to continuously recalibrate model recommendations.</li>
+            </ul>
+          </article>
+          <article class="card" data-domain="service">
+            <span class="domain">Execution Prioritization</span>
+            <h4>Practical sequence for enterprise scale</h4>
+            <ul>
+              <li><strong>Phase 1:</strong> Diagnostic Copilot + Work Order Generation in targeted regions with strong data quality.</li>
+              <li><strong>Phase 2:</strong> Fleet Health Analyst linked to preventive scheduling and service capacity planning.</li>
+              <li><strong>Phase 3:</strong> CV Inspection and Knowledge Engine expansion once repair outcome loops are stable.</li>
+              <li><strong>Program rule:</strong> gate expansion by measured KPI lift and technician trust metrics, not launch count.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="sequencing-roadmap" data-domain="strategy">
+        <h3>AI Roadmap</h3>
+        <p class="subtle">Four-quarter rollout focused on operational value, integration quality, and adoption.</p>
+        <div class="timeline">
+          <div class="t-item">
+            <div class="year">Q1</div>
+            <p>Launch Diagnostic Copilot and Work Order Generator pilots in selected regions; baseline KPI instrumentation and governance gates.</p>
+          </div>
+          <div class="t-item">
+            <div class="year">Q2</div>
+            <p>Scale successful pilot flows, integrate with DMS and scheduling workflows, and activate Conversational Fleet Health Analyst for managers.</p>
+          </div>
+          <div class="t-item">
+            <div class="year">Q3</div>
+            <p>Deploy Computer Vision Digital Inspection across priority sites and connect assistant/telematics triggers to proactive service outreach.</p>
+          </div>
+          <div class="t-item">
+            <div class="year">Q4</div>
+            <p>Operationalize Knowledge Capture Engine, standardize network-wide playbooks, and optimize funding based on KPI lift and trust metrics.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="operating-model" data-domain="strategy">
+        <h3>Operating Model and KPI Framework</h3>
+        <div class="grid-2">
+          <article class="card" data-domain="strategy">
+            <h4>Core governance choices</h4>
+            <ul>
+              <li>Platform-first architecture with explicit reuse targets for FordLLM and Mach1ML components.</li>
+              <li>Shared event model across dealer, vehicle, and service domains to avoid fragmented identity state.</li>
+              <li>Use-case scorecards combining financial, CX, and reliability outcomes for funding decisions.</li>
+            </ul>
+          </article>
+          <article class="card" data-domain="strategy">
+            <h4>Primary KPI stack</h4>
+            <ul>
+              <li>Operational: diagnostic cycle time, work-order cycle time, first-time fix rate.</li>
+              <li>Commercial: service revenue per VIN, conversion from proactive outreach, retention/churn.</li>
+              <li>Experience: customer effort, NPS/CSAT, technician confidence and adoption.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="key-sources" data-domain="strategy">
+        <h3>Key Sources</h3>
+        <p class="subtle">Selected source set used to synthesize this integrated document.</p>
+        <div class="grid-2">
+          <article class="card" data-domain="strategy">
+            <h4>Ford ecosystem and platform references</h4>
+            <ul>
+              <li><a href="https://m0k0ut.github.io/ford_ai_initiatives.html" target="_blank" rel="noopener">Ford AI initiatives page (provided input)</a></li>
+              <li><a href="https://cloud.google.com/blog/products/databases/ford-pro-intelligence-built-on-bigtable-nosql-database" target="_blank" rel="noopener">Ford Pro Intelligence on Bigtable</a></li>
+              <li><a href="https://www.fordpro.com/en-us/intelligence/fleet-management/" target="_blank" rel="noopener">Ford Pro fleet management platform</a></li>
+              <li><a href="https://www.fromtheroad.ford.com/us/en/articles/2026/ford-affordable-smart-vehicle-technology-strategy" target="_blank" rel="noopener">Ford AI assistant and smart-tech strategy</a></li>
+            </ul>
+          </article>
+          <article class="card" data-domain="strategy">
+            <h4>Service AI design references</h4>
+            <ul>
+              <li><a href="https://cartechiq.com/2025/04/18/how-ai-improves-vehicle-diagnostics/" target="_blank" rel="noopener">AI diagnostic acceleration examples</a></li>
+              <li><a href="https://www.oxmaint.com/blog/post/knowledge-capture-automation-technician-notes-llm" target="_blank" rel="noopener">Knowledge capture in maintenance operations</a></li>
+              <li><a href="https://www.infovision.com/case-study/ai-powered-solution-for-vehicle-damage-assessment/" target="_blank" rel="noopener">AI-assisted vehicle inspection patterns</a></li>
+              <li><a href="https://www.automotive-fleet.com/10240957/how-fleet-managers-are-using-generative-ai-to-transform-daily-operations" target="_blank" rel="noopener">Fleet AI operational usage patterns</a></li>
+            </ul>
+          </article>
+        </div>
+        <p class="footer-note">Timestamp: integrated and updated on February 17, 2026.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const toc = document.getElementById("toc");
+    const sections = [...document.querySelectorAll("main section, main header.hero")];
+    const searchInput = document.getElementById("docSearch");
+    const domainButtons = [...document.querySelectorAll("#domainFilter button")];
+    const viewButtons = [...document.querySelectorAll("#viewToggle button")];
+    const detailsList = [...document.querySelectorAll("details")];
+    const expandAllBtn = document.getElementById("expandAll");
+    const collapseAllBtn = document.getElementById("collapseAll");
+    const homeBtn = document.getElementById("homeBtn");
+
+    let activeDomain = "all";
+    let searchQuery = "";
+
+    function buildToc() {
+      const frag = document.createDocumentFragment();
+      sections.forEach((section, index) => {
+        const id = section.id || `section-${index+1}`;
+        section.id = id;
+        const label = section.querySelector("h3, h2")?.textContent?.trim() || "Section";
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = label;
+        btn.dataset.target = id;
+        btn.addEventListener("click", () => {
+          document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        frag.appendChild(btn);
+      });
+      toc.innerHTML = "";
+      toc.appendChild(frag);
+    }
+
+    function syncActiveNav() {
+      const navButtons = [...toc.querySelectorAll("button")];
+      let currentId = sections[0]?.id;
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 140) currentId = section.id;
+      });
+      navButtons.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.target === currentId);
+      });
+    }
+
+    function sectionText(el) {
+      return el.textContent.toLowerCase();
+    }
+
+    function domainMatches(domainValue) {
+      const normalized = (domainValue || "").toLowerCase();
+      return activeDomain === "all" || normalized.includes(activeDomain);
+    }
+
+    function applyFilters() {
+      const cards = [...document.querySelectorAll("main .card[data-domain]")];
+
+      cards.forEach((card) => {
+        const cardDomainMatch = domainMatches(card.dataset.domain);
+        const cardSearchMatch = !searchQuery || sectionText(card).includes(searchQuery);
+        const showCard = cardDomainMatch && cardSearchMatch;
+        card.classList.toggle("hidden-by-filter", !showCard);
+      });
+
+      sections.forEach((section) => {
+        const sectionDomain = section.dataset.domain || "";
+        const domainMatch = domainMatches(sectionDomain);
+        const searchMatch = !searchQuery || sectionText(section).includes(searchQuery);
+        const hasVisibleCard = [...section.querySelectorAll(".card[data-domain]")].some(
+          (card) => !card.classList.contains("hidden-by-filter")
+        );
+        const visible = (domainMatch && searchMatch) || hasVisibleCard;
+        section.classList.toggle("hidden-by-filter", !visible);
+      });
+      syncActiveNav();
+    }
+
+    domainButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        domainButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeDomain = btn.dataset.domain;
+        applyFilters();
+      });
+    });
+
+    searchInput.addEventListener("input", () => {
+      searchQuery = searchInput.value.trim().toLowerCase();
+      applyFilters();
+    });
+
+    viewButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        viewButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const view = btn.dataset.view;
+        document.body.classList.remove("view-outcome", "view-delivery");
+        document.body.classList.add(view === "delivery" ? "view-delivery" : "view-outcome");
+      });
+    });
+
+    expandAllBtn.addEventListener("click", () => detailsList.forEach((d) => d.open = true));
+    collapseAllBtn.addEventListener("click", () => detailsList.forEach((d) => d.open = false));
+    homeBtn.addEventListener("click", () => {
+      window.location.reload();
+    });
+
+    window.addEventListener("scroll", syncActiveNav, { passive: true });
+
+    buildToc();
+    syncActiveNav();
+    applyFilters();
+  </script>
+</body>
+</html>
