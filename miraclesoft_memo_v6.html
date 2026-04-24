@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI-Native Engineering · MiracleSoft</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;background:#fff;color:#0C1A35;-webkit-font-smoothing:antialiased;}
+
+/* ── TOP BAR ── */
+.topbar{background:#0C1A35;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;}
+.topbar-logo{display:flex;align-items:center;height:38px;}
+.topbar-logo svg{height:34px;width:auto;}
+.topbar-logo .st0{fill:#00AAE6;}
+.topbar-logo .st1{fill:#ffffff;}
+.topbar-right{display:flex;align-items:center;gap:0;}
+.topbar-divider{width:1px;height:16px;background:rgba(255,255,255,0.15);margin:0 12px;}
+.topbar-sub{font-size:9px;font-weight:500;color:rgba(255,255,255,0.38);letter-spacing:0.16em;text-transform:uppercase;white-space:nowrap;}
+.topbar-badge{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);border:0.5px solid rgba(255,255,255,0.22);padding:4px 10px;border-radius:3px;white-space:nowrap;background:rgba(255,255,255,0.04);}
+
+/* ── TAB NAV ── */
+.tabnav{background:#0C1A35;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 28px;display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.tabnav::-webkit-scrollbar{display:none;}
+.tn-btn{background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(255,255,255,0.45);padding:14px 0;margin-right:28px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;letter-spacing:0.01em;transition:color .15s,border-color .15s;white-space:nowrap;flex-shrink:0;}
+.tn-btn:hover{color:rgba(255,255,255,0.82);}
+.tn-btn.active{color:#fff;border-bottom-color:#00AAE6;}
+
+/* ── PANELS ── */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ── HERO ── */
+.hero{background:#0C1A35;padding:3rem 2.5rem 2.5rem;}
+.hero-eye{font-size:10px;font-weight:600;color:#00AAE6;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.9rem;}
+.hero-title{font-size:28px;font-weight:700;color:#fff;line-height:1.22;margin-bottom:1.5rem;max-width:560px;}
+.hero-meta{display:grid;grid-template-columns:84px 1fr;row-gap:7px;font-size:13px;max-width:460px;}
+.hml{color:rgba(255,255,255,0.38);font-weight:400;}
+.hmv{color:rgba(255,255,255,0.82);}
+
+/* ── PAGE CONTENT ── */
+.page{background:#fff;max-width:860px;margin:0 auto;}
+
+/* ── SUMMARY BAND ── */
+.summary-band{background:#F0F7FD;border-left:3px solid #00AAE6;padding:1.4rem 1.75rem;margin:0;}
+.summary-lbl{font-size:10px;font-weight:700;color:#00AAE6;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:7px;}
+.summary-txt{font-size:15px;line-height:1.72;color:#0C1A35;}
+
+/* ── SECTION ── */
+.sect{padding:2.5rem 2.5rem;border-bottom:1px solid #EEF0F4;}
+.sect:last-child{border-bottom:none;}
+.sect-num{font-size:10px;font-weight:700;color:#00AAE6;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:7px;}
+.sect-title{font-size:20px;font-weight:700;color:#0C1A35;margin-bottom:1rem;line-height:1.3;}
+.sect-intro{font-size:15px;line-height:1.72;color:#3D4E65;margin-bottom:1.25rem;}
+.sect-intro p{margin-bottom:0.7rem;}
+.sect-intro p:last-child{margin-bottom:0;}
+
+/* ── PILLARS ── */
+.pillar{padding:1.1rem 0;border-bottom:1px solid #EEF0F4;display:flex;gap:18px;align-items:flex-start;}
+.pillar:last-child{border-bottom:none;}
+.pillar-badge{background:#E4F5FC;color:#00AAE6;font-size:11px;font-weight:700;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.pillar-t{font-size:15px;font-weight:600;color:#0C1A35;margin-bottom:4px;}
+.pillar-b{font-size:14px;line-height:1.68;color:#4A5E75;}
+
+/* ── IMPACT ROWS ── */
+.impact-row{padding:1.1rem 0;border-bottom:1px solid #EEF0F4;display:grid;grid-template-columns:190px 1fr;gap:16px;align-items:baseline;}
+.impact-row:last-child{border-bottom:none;}
+.ir-t{font-size:13px;font-weight:700;color:#0C1A35;text-transform:uppercase;letter-spacing:0.06em;}
+.ir-b{font-size:14px;line-height:1.68;color:#4A5E75;}
+
+/* ── ROLE ROWS ── */
+.rrow{padding:0.9rem 0;border-bottom:1px solid #EEF0F4;}
+.rrow:last-child{border-bottom:none;}
+.rrow-t{font-size:14px;font-weight:600;color:#0C1A35;margin-bottom:4px;}
+.rrow-b{font-size:14px;line-height:1.68;color:#4A5E75;}
+
+/* ── MILESTONE ── */
+.ms{padding:0.9rem 0;border-bottom:1px solid #EEF0F4;display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:baseline;}
+.ms:last-child{border-bottom:none;}
+.ms-t{font-size:11px;font-weight:700;color:#00AAE6;letter-spacing:0.12em;text-transform:uppercase;}
+.ms-b{font-size:14px;line-height:1.68;color:#4A5E75;}
+
+/* ── PLIST ── */
+.plist{list-style:none;padding:0;margin-top:0.25rem;}
+.plist li{font-size:14px;color:#4A5E75;padding:5px 0 5px 20px;position:relative;line-height:1.68;}
+.plist li::before{content:'';position:absolute;left:4px;top:14px;width:5px;height:5px;background:#00AAE6;border-radius:50%;}
+
+/* ── EXEC ONE-PAGER ── */
+.op-band{background:#0C1A35;padding:2.75rem 2.5rem 2.25rem;}
+.op-eye{font-size:10px;font-weight:700;color:#00AAE6;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.8rem;}
+.op-title{font-size:26px;font-weight:700;color:#fff;line-height:1.22;max-width:540px;margin-bottom:0.65rem;}
+.op-sub{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.58;max-width:480px;}
+.op-section{padding:2rem 2.5rem;}
+.op-thesis{background:#F0F7FD;border-left:3px solid #00AAE6;padding:1.1rem 1.4rem;margin-bottom:2rem;font-size:15px;line-height:1.72;color:#0C1A35;}
+.op-h{font-size:11px;font-weight:700;color:#0C1A35;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:1rem;}
+.op-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem;}
+.op-m{background:#0C1A35;border-radius:6px;padding:1rem 1.1rem;}
+.op-mv{font-size:12px;font-weight:700;color:#00AAE6;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.08em;}
+.op-ml{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5;}
+.op-pillars{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2rem;}
+.op-pill{background:#F8FAFC;border:1px solid #E5EBF2;border-radius:6px;padding:1rem 1.1rem;}
+.op-pill-n{font-size:10px;font-weight:700;color:#00AAE6;letter-spacing:0.16em;margin-bottom:5px;}
+.op-pill-t{font-size:13px;font-weight:600;color:#0C1A35;margin-bottom:4px;}
+.op-pill-b{font-size:12px;line-height:1.52;color:#4A5E75;}
+.op-ask{background:#F0F7FD;border-radius:6px;padding:1.4rem 1.75rem;}
+.op-ask-t{font-size:11px;font-weight:700;color:#0C1A35;margin-bottom:0.7rem;text-transform:uppercase;letter-spacing:0.1em;}
+.op-ask-list{list-style:none;padding:0;}
+.op-ask-list li{font-size:14px;color:#3D4E65;padding:5px 0 5px 20px;position:relative;line-height:1.62;}
+.op-ask-list li::before{content:'';position:absolute;left:4px;top:13px;width:5px;height:5px;background:#00AAE6;border-radius:50%;}
+
+/* ── FOOTER ── */
+.foot{background:#0C1A35;display:flex;justify-content:space-between;align-items:center;padding:1.1rem 2rem;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);border-top:1px solid rgba(255,255,255,0.07);}
+
+/* ── TABLET ── */
+@media(max-width:768px){
+  .topbar{padding:0 20px;}
+  .hero{padding:2.25rem 1.5rem 2rem;}
+  .hero-title{font-size:24px;}
+  .sect{padding:2rem 1.5rem;}
+  .op-band{padding:2rem 1.5rem 1.75rem;}
+  .op-section{padding:1.75rem 1.5rem;}
+  .op-metrics{grid-template-columns:1fr 1fr;}
+  .tabnav{padding:0 20px;}
+  .summary-band{padding:1.2rem 1.5rem;}
+}
+
+/* ── MOBILE ── */
+@media(max-width:520px){
+  .topbar{padding:0 16px;height:58px;}
+  .topbar-logo svg{height:26px;}
+  .topbar-sub{display:none;}
+  .topbar-divider{display:none;}
+  .tabnav{padding:0 16px;}
+  .tn-btn{font-size:12px;padding:13px 0;margin-right:22px;}
+  .hero{padding:1.75rem 1.25rem 1.5rem;}
+  .hero-title{font-size:21px;}
+  .hero-eye{font-size:9px;}
+  .sect{padding:1.75rem 1.25rem;}
+  .sect-title{font-size:18px;}
+  .summary-band{padding:1rem 1.25rem;}
+  .op-band{padding:1.75rem 1.25rem 1.5rem;}
+  .op-title{font-size:21px;}
+  .op-section{padding:1.5rem 1.25rem;}
+  .op-metrics{grid-template-columns:1fr;}
+  .op-pillars{grid-template-columns:1fr;}
+  .impact-row{grid-template-columns:1fr;}
+  .ir-t{margin-bottom:4px;}
+  .ms{grid-template-columns:1fr;}
+  .ms-t{margin-bottom:4px;}
+  .hero-meta{grid-template-columns:70px 1fr;}
+  .foot{flex-direction:column;gap:6px;text-align:center;padding:1rem 1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 145.7 41.3" aria-label="MiracleSoft">
+
+      <g>
+        <g>
+          <polygon class="st0" points="107.2,37.6 110.4,37.6 110.4,36 107.2,36 107.2,34.6 110.6,34.6 110.6,33.1 104.9,33.1 104.9,40.7 110.7,40.7 110.7,39.2 107.2,39.2"/>
+          <polygon class="st0" points="66.3,37.6 69.4,37.6 69.4,36 66.3,36 66.3,34.6 69.6,34.6 69.6,33.1 64,33.1 64,40.7 69.7,40.7 69.7,39.2 66.3,39.2"/>
+          <polygon class="st0" points="84.6,35.5 82.9,33.1 80.5,33.1 83.5,37.3 83.5,40.7 85.8,40.7 85.8,37.2 88.8,33.1 86.4,33.1"/>
+          <path class="st0" d="M78.7,36.7c-0.4-0.2-0.8-0.5-1.4-0.7c-0.3-0.2-0.6-0.3-0.7-0.4c-0.1-0.1-0.2-0.2-0.2-0.4c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.3-0.2,0.6-0.2c0.4,0,0.8,0.1,1.2,0.3c0.4,0.2,0.7,0.4,1,0.6v-1.8c-0.1-0.1-0.2-0.1-0.5-0.2c-0.2-0.1-0.5-0.2-0.9-0.3C77.8,33.1,77.4,33,77,33c-0.6,0-1.1,0.1-1.5,0.3c-0.4,0.2-0.7,0.5-0.9,0.8c-0.2,0.3-0.3,0.7-0.3,1.1c0,0.4,0.1,0.8,0.3,1.1c0.2,0.3,0.5,0.6,0.8,0.8c0.3,0.2,0.7,0.4,1.1,0.6c0.4,0.1,0.7,0.3,0.9,0.4c0.2,0.1,0.3,0.3,0.3,0.5c0,0.1-0.1,0.2-0.2,0.4c-0.1,0.1-0.4,0.2-0.8,0.2c-0.4,0-0.8-0.1-1.2-0.2c-0.4-0.2-0.7-0.4-1.1-0.6v1.9c0.4,0.2,0.8,0.3,1.2,0.4c0.4,0.1,0.7,0.1,0.9,0.2c0.2,0,0.4,0,0.6,0c0.6,0,1.1-0.1,1.5-0.3c0.4-0.2,0.8-0.4,1-0.8c0.2-0.3,0.4-0.8,0.4-1.2c0-0.4-0.1-0.8-0.3-1.1C79.4,37.1,79.1,36.9,78.7,36.7z"/>
+          <path class="st0" d="M93.7,36.7c-0.3-0.2-0.8-0.5-1.4-0.7c-0.3-0.2-0.6-0.3-0.7-0.4c-0.1-0.1-0.2-0.2-0.2-0.4c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.3-0.2,0.6-0.2c0.4,0,0.8,0.1,1.2,0.3c0.4,0.2,0.7,0.4,1,0.6v-1.8c-0.1-0.1-0.2-0.1-0.5-0.2c-0.2-0.1-0.5-0.2-0.9-0.3c-0.4-0.1-0.7-0.1-1.2-0.1c-0.6,0-1.1,0.1-1.5,0.3c-0.4,0.2-0.7,0.5-0.9,0.8c-0.2,0.3-0.3,0.7-0.3,1.1c0,0.4,0.1,0.8,0.3,1.1c0.2,0.3,0.5,0.6,0.8,0.8c0.3,0.2,0.7,0.4,1.1,0.6c0.4,0.1,0.7,0.3,0.9,0.4c0.2,0.1,0.3,0.3,0.3,0.5c0,0.1-0.1,0.2-0.2,0.4c-0.1,0.1-0.4,0.2-0.8,0.2c-0.4,0-0.8-0.1-1.2-0.2c-0.4-0.2-0.7-0.4-1.1-0.6v1.9c0.4,0.2,0.8,0.3,1.2,0.4c0.4,0.1,0.7,0.1,0.9,0.2c0.2,0,0.4,0,0.6,0c0.6,0,1.1-0.1,1.5-0.3c0.4-0.2,0.8-0.4,1-0.8c0.2-0.3,0.4-0.8,0.4-1.2c0-0.4-0.1-0.8-0.3-1.1C94.3,37.1,94,36.9,93.7,36.7z"/>
+          <path class="st0" d="M127.9,37.4c-0.2-0.3-0.5-0.5-0.8-0.8c-0.4-0.2-0.8-0.5-1.4-0.7c-0.3-0.2-0.6-0.3-0.7-0.4c-0.1-0.1-0.2-0.2-0.2-0.4c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.3-0.2,0.6-0.2c0.4,0,0.8,0.1,1.2,0.3c0.4,0.2,0.7,0.4,1,0.6v-1.8c-0.1-0.1-0.2-0.1-0.5-0.2c-0.2-0.1-0.5-0.2-0.9-0.3c-0.4-0.1-0.7-0.1-1.2-0.1c-0.6,0-1.1,0.1-1.5,0.3c-0.4,0.2-0.7,0.5-0.9,0.8c-0.2,0.3-0.3,0.7-0.3,1.1c0,0.4,0.1,0.8,0.3,1.1c0.2,0.3,0.5,0.6,0.8,0.8c0.3,0.2,0.7,0.4,1.1,0.6c0.4,0.1,0.7,0.3,0.9,0.4c0.2,0.1,0.3,0.3,0.3,0.5c0,0.1-0.1,0.2-0.2,0.4c-0.1,0.1-0.4,0.2-0.8,0.2c-0.4,0-0.8-0.1-1.2-0.2c-0.4-0.2-0.7-0.4-1.1-0.6v1.9c0.4,0.2,0.8,0.3,1.2,0.4c0.4,0.1,0.7,0.1,0.9,0.2c0.2,0,0.4,0,0.6,0c0.6,0,1.1-0.1,1.5-0.3c0.4-0.2,0.8-0.4,1-0.8c0.2-0.3,0.4-0.8,0.4-1.2C128.2,38.1,128.1,37.7,127.9,37.4z"/>
+          <path class="st0" d="M5.8,36.7c-0.3-0.2-0.8-0.5-1.4-0.7c-0.3-0.2-0.6-0.3-0.7-0.4c-0.1-0.1-0.2-0.2-0.2-0.4c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.3-0.2,0.6-0.2c0.4,0,0.8,0.1,1.2,0.3c0.4,0.2,0.7,0.4,1,0.6v-1.8c-0.1-0.1-0.2-0.1-0.5-0.2c-0.2-0.1-0.5-0.2-0.9-0.3C4.9,33.1,4.5,33,4.1,33c-0.6,0-1.1,0.1-1.5,0.3c-0.4,0.2-0.7,0.5-0.9,0.8c-0.2,0.3-0.3,0.7-0.3,1.1c0,0.4,0.1,0.8,0.3,1.1c0.2,0.3,0.5,0.6,0.8,0.8c0.3,0.2,0.7,0.4,1.1,0.6c0.4,0.1,0.7,0.3,0.9,0.4c0.2,0.1,0.3,0.3,0.3,0.5c0,0.1-0.1,0.2-0.2,0.4c-0.1,0.1-0.4,0.2-0.8,0.2c-0.4,0-0.8-0.1-1.2-0.2c-0.4-0.2-0.7-0.4-1.1-0.6v1.9c0.4,0.2,0.8,0.3,1.2,0.4c0.4,0.1,0.7,0.1,0.9,0.2c0.2,0,0.4,0,0.6,0c0.6,0,1.1-0.1,1.5-0.3c0.4-0.2,0.8-0.4,1-0.8c0.2-0.3,0.4-0.8,0.4-1.2c0-0.4-0.1-0.8-0.3-1.1C6.4,37.1,6.2,36.9,5.8,36.7z"/>
+          <polygon class="st0" points="95.8,35 98.5,35 98.5,40.7 100.8,40.7 100.8,35 103.6,35 103.6,33.1 95.8,33.1"/>
+          <polygon class="st0" points="116.6,36 114.3,33.1 112.2,33.1 112.2,40.7 114.4,40.7 114.4,36.3 116.5,38.9 116.7,38.9 118.7,36.3 118.7,40.7 121,40.7 121,33.1 118.9,33.1"/>
+          <polygon class="st0" points="24.4,35 27.2,35 27.2,40.7 29.5,40.7 29.5,35 32.3,35 32.3,33.1 24.4,33.1"/>
+          <polygon class="st0" points="18,40.7 20.3,40.7 20.3,37.6 23.5,37.6 23.5,36.1 20.3,36.1 20.3,34.6 23.5,34.6 23.5,33.1 18,33.1"/>
+          <path class="st0" d="M15.5,34.2c-0.4-0.4-0.8-0.6-1.4-0.8C13.6,33.1,13,33,12.3,33c-0.9,0-1.7,0.2-2.4,0.5c-0.7,0.4-1.1,0.8-1.4,1.4C8.2,35.6,8,36.2,8,36.9c0,0.7,0.2,1.3,0.5,1.9c0.3,0.6,0.8,1.1,1.4,1.4c0.6,0.4,1.4,0.5,2.4,0.5c0.9,0,1.7-0.2,2.4-0.5c0.6-0.3,1.1-0.8,1.5-1.4c0.3-0.6,0.5-1.2,0.5-2c0-0.5-0.1-1-0.3-1.5C16.1,34.9,15.9,34.5,15.5,34.2z M14,37.9c-0.2,0.3-0.4,0.5-0.7,0.7c-0.3,0.2-0.7,0.2-1.1,0.2c-0.6,0-1.1-0.2-1.4-0.5c-0.4-0.4-0.5-0.8-0.5-1.4c0-0.6,0.2-1,0.5-1.4c0.4-0.4,0.8-0.5,1.4-0.5c0.3,0,0.6,0,0.8,0.1c0.2,0.1,0.5,0.2,0.6,0.4c0.2,0.2,0.3,0.4,0.4,0.6c0.1,0.2,0.1,0.5,0.1,0.8C14.3,37.3,14.2,37.6,14,37.9z"/>
+          <polygon class="st0" points="43.5,33.1 41.9,37.3 40.1,33.1 38.5,33.1 36.7,37.3 35.1,33.1 32.7,33.1 35.9,40.8 37.3,40.8 39.3,36.3 41.3,40.8 42.6,40.8 45.9,33.1"/>
+          <path class="st0" d="M48.7,33.1l-3.4,7.6h2.3l0.6-1.5h3.3l0.6,1.5h2.3l-3.3-7.6H48.7z M48.9,37.9l1.1-2.8l1.1,2.8H48.9z"/>
+          <path class="st0" d="M61.5,37.9c-0.2-0.2-0.4-0.4-0.6-0.5c0.2-0.1,0.4-0.2,0.6-0.3c0.2-0.1,0.3-0.3,0.5-0.6c0.1-0.3,0.2-0.6,0.2-1c0-0.3-0.1-0.7-0.3-1c-0.2-0.4-0.5-0.7-0.9-0.9c-0.4-0.3-0.9-0.4-1.5-0.4h-3.9v7.6h2.3v-3h0.3c0.3,0,0.5,0,0.6,0.1c0.2,0.1,0.3,0.2,0.5,0.4c0.2,0.2,0.4,0.6,0.6,1.1l0.6,1.3h2.5l-0.8-1.6C61.9,38.5,61.7,38.1,61.5,37.9z M59.5,36.2c-0.2,0.1-0.6,0.2-1.1,0.2h-0.5v-1.8h0.5c0.5,0,0.9,0.1,1.1,0.2c0.2,0.1,0.3,0.4,0.3,0.7C59.8,35.9,59.7,36.1,59.5,36.2z"/>
+        </g>
+        <g>
+          <path class="st1" d="M24.1,9.7c-1.6,0-3.1,0-4.7,0c-0.3,0-0.5,0.1-0.7,0.4c-1.7,2.1-3.5,4.2-5.2,6.3c-0.3,0.3-0.4,0.3-0.7,0c-1.7-2.1-3.4-4.2-5.1-6.3C7.5,9.8,7.3,9.7,6.9,9.7c-1.5,0-3,0-4.5,0c-0.7,0-0.9,0.2-0.9,1c0,6.1,0,12.3,0,18.4c0,0.7,0.2,1,0.9,1c1.5,0,3.1,0,4.6,0c0.7,0,1-0.2,1-0.9c0-3,0-5.9,0-8.9c0-0.2,0-0.3,0.1-0.5c0.2,0.1,0.2,0.2,0.3,0.3c1.3,1.6,2.6,3.2,4,4.8c0.5,0.6,1,0.6,1.5,0c0.5-0.6,1-1.2,1.5-1.8c0.9-1.1,1.8-2.2,2.7-3.3l0.1,0c0,0.2,0,0.3,0,0.5c0,3,0,5.9,0,8.9c0,0.6,0.2,0.9,0.9,0.9c1.7,0,3.3,0,5,0c0.6,0,0.8-0.3,0.8-0.8c0-6.2,0-12.4,0-18.7C24.9,10,24.6,9.7,24.1,9.7z"/>
+          <path class="st1" d="M58,23.2c-0.4-0.7-0.8-1.3-1.4-1.8c-0.3-0.3-0.2-0.4,0.1-0.6c1.1-0.7,1.8-1.6,2.1-2.8c1-3.3-1-7.1-4.8-8c-0.9-0.2-1.8-0.2-2.7-0.3c-3,0-5.9,0-8.9,0c-0.8,0-1,0.2-1,1c0,3.1,0,6.1,0,9.2c0,3.1,0,6.2,0,9.2c0,0.7,0.2,0.9,0.9,0.9c1.6,0,3.3,0,4.9,0c0.6,0,0.9-0.2,0.9-0.9c0-1,0-2,0-3c0-1.1,0-2.1,0-3.2c0-0.2,0-0.5,0.3-0.5c0.9,0,1.7,0.1,2.3,0.9c0.6,0.7,1,1.5,1.4,2.3c0.6,1.3,1.2,2.7,1.8,4c0.1,0.2,0.2,0.4,0.5,0.4c2,0,3.9,0,5.9,0c0.5,0,0.8-0.5,0.6-0.9C59.9,27.2,59,25.2,58,23.2z M51.8,17.5c-0.3,0.3-0.6,0.4-1,0.5c-0.8,0.2-1.6,0.1-2.4,0.1c-0.3,0-0.4-0.1-0.4-0.4c0-0.5,0-1,0-1.5c0-0.5,0-1,0-1.4c0-0.2,0.1-0.4,0.4-0.4c0.8,0,1.7,0,2.5,0.2C52.1,14.9,52.6,16.5,51.8,17.5z"/>
+          <path class="st1" d="M82.9,23.2c-1.9-4.3-3.8-8.6-5.7-12.9c-0.2-0.4-0.4-0.6-0.8-0.6c-1.9,0-3.9,0-5.8,0c-0.4,0-0.6,0.1-0.8,0.5c-0.8,1.9-1.7,3.8-2.5,5.7c-1.9,4.4-3.8,8.7-5.8,13c-0.3,0.7,0,1.1,0.7,1.1c1.8,0,3.5,0,5.3,0c0.4,0,0.6-0.1,0.7-0.5c0.4-1,0.8-2,1.2-3c0.1-0.3,0.3-0.5,0.7-0.5c1.1,0,2.3,0,3.4,0c1.2,0,2.3,0,3.5,0c0.4,0,0.6,0.1,0.7,0.5c0.4,1,0.8,2,1.2,3c0.1,0.3,0.3,0.4,0.6,0.4c1.8,0,3.6,0,5.4,0c0.7,0,0.9-0.4,0.7-1C84.6,27.1,83.8,25.1,82.9,23.2z M74.7,21.9c-1,0-1.9,0-2.9,0c-0.4,0-0.4-0.1-0.3-0.5c0.6-1.6,1.3-3.1,1.9-4.7c0-0.1,0.1-0.1,0.1-0.2c0.6,1.6,1.2,3,1.8,4.5C75.7,21.9,75.7,21.9,74.7,21.9z"/>
+          <path class="st1" d="M143.3,25.2c-2.4,0-4.8,0-7.1,0c-0.5,0-0.6-0.1-0.6-0.6c0-0.7,0-1.3,0-2c0-0.6,0-0.6,0.7-0.6c2.2,0,4.4,0,6.6,0c0.7,0,0.9-0.2,0.9-0.9c0-0.9,0-1.9,0-2.8c0-1-0.1-1.1-1.1-1.1c-2.1,0-4.2,0-6.3,0c-0.7,0-0.7,0-0.7-0.6c0-0.4,0-0.7,0-1.1c0-0.9-0.1-0.9,0.8-0.9c2.2,0,4.5,0,6.7,0c0.7,0,1-0.3,1-1c0-1,0-1.9,0-2.9c0-0.7-0.3-1-1-1c-4.4,0-8.9,0-13.3,0c-0.8,0-1,0.2-1,1c0,3.1,0,6.1,0,9.2c0,3.1,0,6.2,0,9.3c0,0.6,0.2,0.9,0.8,0.9c4.6,0,9.2,0,13.8,0c0.6,0,0.8-0.3,0.8-0.8c0-1,0-2,0-2.9C144.3,25.4,144.2,25.2,143.3,25.2z"/>
+          <path class="st1" d="M106,23.7c0-0.7-0.5-1-1.1-0.6c-1.2,0.7-2.5,1.3-3.9,1.6c-1.5,0.3-2.9,0.4-4.4-0.2c-1.9-0.7-3.2-2.1-3.3-4.2c-0.2-2.1,0.9-3.8,2.9-4.7c1.9-0.9,3.8-0.9,5.7-0.3c1.1,0.3,2,0.9,3,1.4c0.5,0.3,1,0,1-0.6c0-0.8,0-1.6,0-2.3c0-0.7,0-1.4,0-2.1c0-0.5-0.2-0.7-0.6-0.8c-0.7-0.2-1.4-0.5-2.1-0.6c-3.1-0.8-6.3-1.1-9.5-0.1c-3,0.9-5.3,2.7-6.5,5.7c-0.7,1.7-0.8,3.5-0.6,5.4c0.4,3.8,2.4,6.5,5.9,8.1c1.7,0.8,3.4,1,5.3,1c2.7,0,5.4-0.4,7.8-1.6c0.4-0.2,0.5-0.4,0.5-0.8C106,26.5,106,25.1,106,23.7z"/>
+          <path class="st1" d="M124.5,24.5c-2.4,0-4.7,0-7.1,0c-0.7,0-0.7,0-0.8-0.7c0-4.4,0-8.7,0-13.1c0-0.7-0.2-0.9-0.9-0.9c-1.6,0-3.2,0-4.9,0c-0.7,0-0.9,0.2-0.9,1c0,3.1,0,6.1,0,9.2c0,3.1,0,6.2,0,9.3c0,0.6,0.2,0.9,0.8,0.9c4.6,0,9.2,0,13.9,0c0.6,0,0.9-0.2,0.9-0.8c0-1.2,0-2.5,0-3.7C125.5,24.7,125.3,24.5,124.5,24.5z"/>
+          <path class="st1" d="M35.6,9.7c-1.6,0-3.2,0-4.8,0c-0.8,0-1,0.2-1,1c0,3,0,6.1,0,9.1c0,3.1,0,6.2,0,9.2c0,0.7,0.2,1,0.9,1c1.6,0,3.2,0,4.8,0c0.7,0,0.9-0.3,0.9-0.9c0-6.2,0-12.3,0-18.5C36.5,10,36.2,9.7,35.6,9.7z"/>
+          <path class="st1" d="M33,8.1c1.9,0,3.4-1.5,3.4-3.4c0-1.9-1.5-3.4-3.4-3.4c-1.9,0-3.4,1.5-3.4,3.4C29.6,6.6,31.1,8.1,33,8.1z"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-sub">Internal document</span>
+    <div class="topbar-divider"></div>
+    <div class="topbar-badge">Confidential</div>
+  </div>
+</div>
+
+<div class="tabnav">
+  <button class="tn-btn active" data-tab="exec">Executive summary</button>
+  <button class="tn-btn" data-tab="memo">Full memo</button>
+  <button class="tn-btn" data-tab="role">Role description</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 01 — EXEC ONE-PAGER
+     ════════════════════════════════════════ -->
+<div class="panel active" id="tab-exec">
+
+  <div class="op-band">
+    <div class="op-eye">For leadership · One-pager</div>
+    <h1 class="op-title">AI-native engineering at MiracleSoft</h1>
+    <p class="op-sub">One role. One framework. Compounding returns across every squad and account.</p>
+  </div>
+
+  <div class="page">
+    <div class="op-section">
+
+      <div class="op-thesis">
+        Every competitor licenses the same models and tools. What differentiates MiracleSoft in 2026 is whether AI usage is governed, measured, and compounded — or left to each squad to reinvent. This memo proposes a six-pillar framework to codify AI-native engineering, and a Forward Deployed AI-Native Coach as the role that makes it operational.
+      </div>
+
+      <div class="op-h">Why this matters to our business</div>
+      <div class="op-metrics">
+        <div class="op-m"><div class="op-mv">Margin</div><div class="op-ml">Higher output per billable hour across Agile-as-a-Service squads</div></div>
+        <div class="op-m"><div class="op-mv">Win rate</div><div class="op-ml">AI governance is now a procurement criterion in BFSI, Healthcare, and Insurance</div></div>
+        <div class="op-m"><div class="op-mv">Cost control</div><div class="op-ml">Inference is a line item. Scorecard visibility protects gross margin on fixed-fee work</div></div>
+        <div class="op-m"><div class="op-mv">IP value</div><div class="op-ml">Internal adoption validates miraAI and makes Rapid60 engagements repeatable</div></div>
+        <div class="op-m"><div class="op-mv">Consistency</div><div class="op-ml">Standardizes delivery quality across US, India, and our global squads</div></div>
+        <div class="op-m"><div class="op-mv">Talent</div><div class="op-ml">AI-native engineers signal-check employers. This framework is the signal</div></div>
+      </div>
+
+      <div class="op-h">The six-pillar framework — at a glance</div>
+      <div class="op-pillars">
+        <div class="op-pill"><div class="op-pill-n">01</div><div class="op-pill-t">Plan before inference</div><div class="op-pill-b">Substantive AI work starts as a Plan PR. Scope, category, budget, approach — reviewed before inference runs.</div></div>
+        <div class="op-pill"><div class="op-pill-n">02</div><div class="op-pill-t">Discovery-first kickoff</div><div class="op-pill-b">3-day creative sprint at project start. Team-level token pool, full model freedom. Outputs: demos, approach, risk notes.</div></div>
+        <div class="op-pill"><div class="op-pill-n">03</div><div class="op-pill-t">Outcome-weighted scorecard</div><div class="op-pill-b">Weekly per-engineer metrics. Token-to-value ratio over raw volume. Feeds coaching, staffing, and promotion.</div></div>
+        <div class="op-pill"><div class="op-pill-n">04</div><div class="op-pill-t">Context and shared tooling</div><div class="op-pill-b">Every repo ships with an instruction file. Shared sub-agent and command library reused across squads and CoEs.</div></div>
+        <div class="op-pill"><div class="op-pill-n">05</div><div class="op-pill-t">Guardrails and evaluation gates</div><div class="op-pill-b">Pre-commit hooks, CI checks, evaluation harnesses. Framework enforced by tooling. Critical for client code.</div></div>
+        <div class="op-pill"><div class="op-pill-n">06</div><div class="op-pill-t">Delivery ledger</div><div class="op-pill-b">Internal record of AI-driven wins. Patterns that worked, velocity gains, costs avoided. Visible to leadership.</div></div>
+      </div>
+
+      <div class="op-ask">
+        <div class="op-ask-t">What we are asking for</div>
+        <ul class="op-ask-list">
+          <li>Headcount approval for one Forward Deployed AI-Native Coach, reporting to engineering leadership</li>
+          <li>Target hire within 90 days — initial focus on framework v1.0 and the scaffolding CLI</li>
+          <li>Success measured at 180 days by framework adoption across squads, not individual output</li>
+          <li>Function revisited at 12 months; expand to a small team if adoption metrics justify it</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 02 — FULL MEMO
+     ════════════════════════════════════════ -->
+<div class="panel" id="tab-memo">
+
+  <div class="hero">
+    <div class="hero-eye">Proposal · Engineering</div>
+    <h1 class="hero-title">Establish AI-native engineering culture at MiracleSoft</h1>
+  </div>
+
+  <div class="page">
+
+    <div class="summary-band">
+      <div class="summary-lbl">Summary</div>
+      <div class="summary-txt">MiracleSoft's AI adoption has outrun our governance, delivery, and coaching infrastructure. This memo proposes a six-pillar framework to codify AI-native engineering at MiracleSoft, and a Forward Deployed AI-Native Coach as the role that makes it operational. The framework is the product. The role exists to make it real.</div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">01 · The opportunity</div>
+      <h2 class="sect-title">AI tooling is a commodity. Culture is the moat.</h2>
+      <div class="sect-intro">
+        <p>Every competitor licenses the same models, the same agents, the same IDEs. What sets a high-performing engineering org apart in 2026 is practice — how work is planned, executed, reviewed, and shared.</p>
+        <p>Today MiracleSoft has capable individual adopters and no shared framework. Token spend is invisible. Prompt patterns vanish when engineers rotate off accounts. Compliance exposure grows quietly. The AI-forward talent we want to hire cannot tell from the outside whether we take this seriously.</p>
+        <p>The cost of waiting another quarter is drift, duplication, and talent leakage.</p>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">02 · The framework</div>
+      <h2 class="sect-title">Six pillars of AI-native engineering at MiracleSoft</h2>
+      <div class="sect-intro"><p>Each pillar is concrete, measurable, and enforced by tooling. Together they define how a MiracleSoft squad plans, executes, reviews, and shares AI-driven work across the Global Delivery Model.</p></div>
+
+      <div class="pillar">
+        <div class="pillar-badge">01</div>
+        <div class="pillar-body"><div class="pillar-t">Plan before inference</div><div class="pillar-b">Substantive AI-driven work begins with a Plan PR — scope, category, estimated cost, approach. Assigned category (scaffold, refactor, debug, explore, test, document, review) drives token budget tier and reviewer. Reviewed before any inference runs. Small tasks pass through; we pick our spots.</div></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-badge">02</div>
+        <div class="pillar-body"><div class="pillar-t">Discovery-first kickoff</div><div class="pillar-b">Every new project opens with a 3-day discovery session. Team-level token pool, no individual caps. Full creative freedom across models, agents, and tools. Deliverables: working demos, approach recommendation, risk notes. Prevents premature convergence and surfaces the best ideas before execution pressure builds.</div></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-badge">03</div>
+        <div class="pillar-body"><div class="pillar-t">Outcome-weighted scorecard</div><div class="pillar-b">Weekly per-engineer metrics: tokens consumed, sessions run, Plan PR quality, and token-to-value ratio. Ratio matters more than volume — so the scorecard rewards efficiency, not just usage. Feeds coaching, staffing, and promotion decisions.</div></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-badge">04</div>
+        <div class="pillar-body"><div class="pillar-t">Context and shared tooling</div><div class="pillar-b">Every repository ships with a project instruction file (CLAUDE.md, AGENTS.md, or equivalent). Engineers maintain personal context files. A published context engineering standard treats prompts and agent definitions with the rigor we apply to code. An org-maintained sub-agent and command library lets squads pull, customize, and contribute back. All versioned in git.</div></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-badge">05</div>
+        <div class="pillar-body"><div class="pillar-t">Guardrails and evaluation gates</div><div class="pillar-b">Pre-commit hooks and CI checks enforce the framework: Plan PR exists, category assigned, budget respected, context updated, AI-generated code passes evaluation before merge. Critical for client delivery. Compliance becomes the path of least resistance.</div></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-badge">06</div>
+        <div class="pillar-body"><div class="pillar-t">Delivery ledger</div><div class="pillar-b">Internal record of AI-driven shipped work across accounts: which squad shipped what, which patterns worked, measurable velocity and quality gains. Turns individual wins into org-wide knowledge and makes AI impact visible to leadership.</div></div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">03 · Why a dedicated role</div>
+      <h2 class="sect-title">Culture does not run itself</h2>
+      <div class="sect-intro">
+        <p>Every pillar above is cross-cutting. No squad owns Plan PR standards, the task taxonomy, or the shared agent library. Side-of-desk maintenance gets deprioritized the moment client delivery pressure rises. The framework becomes a document no one opens.</p>
+        <p>A Forward Deployed AI-Native Coach operates the framework: curating the taxonomy, reviewing Plan PRs, leading discovery sessions, stewarding the shared library, and embedding with squads to coach adoption. Hands-on technical leadership — success measured by framework adoption and squad productivity. Full role description is in tab 03.</p>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">04 · Business impact</div>
+      <h2 class="sect-title">What the framework delivers for a professional services business</h2>
+      <div class="sect-intro"><p>MiracleSoft's business is billable engineering delivery at scale — 2,500+ Miraclites executing across 44 Fortune 100 accounts through Agile-as-a-Service squads, Rapid60 engagements, and our Centers of Excellence. Every lever in the framework maps to the economics of that business.</p></div>
+
+      <div class="impact-row"><div class="ir-t">Billable delivery margin</div><div class="ir-b">Scaffolding, shared sub-agents, and Plan PR discipline raise output per billable hour. On Agile-as-a-Service engagements, even modest productivity gains translate to margin expansion — or sharper pricing on contested bids. In a services business, utilization is the product.</div></div>
+      <div class="impact-row"><div class="ir-t">Win rate on AI RFPs</div><div class="ir-b">Clients in BFSI, Healthcare, Insurance, and Manufacturing now ask how we govern AI before they sign. A published, version-controlled framework is a bid asset most competitors cannot match. Revenue lever, not internal hygiene.</div></div>
+      <div class="impact-row"><div class="ir-t">Token cost visibility</div><div class="ir-b">Inference is a material cost on every AI engagement. The scorecard gives MiracleSoft visibility that most services firms won't have for another 12 months — protecting gross margin on fixed-fee work as AI spend grows.</div></div>
+      <div class="impact-row"><div class="ir-t">miraAI and Rapid60</div><div class="ir-b">The framework is a living reference implementation for miraAI inside MiracleSoft, and provides the execution discipline that makes Rapid60 engagements repeatable rather than heroic. Our own delivery becomes the proof point for our own IP.</div></div>
+      <div class="impact-row"><div class="ir-t">Global delivery consistency</div><div class="ir-b">Squads across the US, India, and our other geographies adopt AI tooling at different rates. A shared framework, scaffolding CLI, and instruction file convention deliver consistent quality and real cross-squad mobility.</div></div>
+      <div class="impact-row"><div class="ir-t">CoE multiplier</div><div class="ir-b">The shared library plugs into every Center of Excellence — Cloud, Data, Integration, Automation. One investment, leverage across practices.</div></div>
+      <div class="impact-row"><div class="ir-t">Talent pipeline</div><div class="ir-b">AI-native engineers signal-check employers before applying. A credible published framework says MiracleSoft is serious. That signal compounds in recruitment and retention, where replacing a senior Miraclite runs into six figures.</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 03 — ROLE DESCRIPTION
+     ════════════════════════════════════════ -->
+<div class="panel" id="tab-role">
+
+  <div class="hero">
+    <div class="hero-eye">Job description</div>
+    <h1 class="hero-title">Forward Deployed AI-Native Coach</h1>
+    <div class="hero-meta">
+      <div class="hml">Team</div><div class="hmv">Engineering, Practice Management, Pre-sales</div>
+      <div class="hml">Location</div><div class="hmv">Novi, Michigan (hybrid)</div>
+      <div class="hml">Reports to</div><div class="hmv">Engineering leadership</div>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <div class="sect">
+      <div class="sect-num">Overview</div>
+      <h2 class="sect-title">Turn AI governance from aspiration into practice</h2>
+      <div class="sect-intro">
+        <p>You will define and operate a first-of-its-kind function at MiracleSoft — the function that makes AI-native culture real across squads, accounts, and CoEs. You will own the framework, ship the tooling that enforces it, coach the engineers who live inside it, and stay hands-on with code, context, and agents.</p>
+        <p>You are forward-deployed to wherever the friction is. Your work directly shapes how MiracleSoft ships software in the AI era.</p>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">What you will drive</div>
+      <h2 class="sect-title">Core responsibilities</h2>
+      <div class="rrow"><div class="rrow-t">Framework ownership</div><div class="rrow-b">Own the six-pillar governance framework end-to-end. Publish, maintain, and evolve it based on squad feedback, account learnings, and industry shifts.</div></div>
+      <div class="rrow"><div class="rrow-t">Plan PR review and gatekeeping</div><div class="rrow-b">Review substantive Plan PRs before inference runs. Ensure scope, category, budget, and approach are clear. Set the bar others follow.</div></div>
+      <div class="rrow"><div class="rrow-t">Discovery session leadership</div><div class="rrow-b">Design and facilitate 3-day discovery sessions at project kickoff. Coach squads through creative exploration; consolidate outputs into actionable approach recommendations.</div></div>
+      <div class="rrow"><div class="rrow-t">Shared library stewardship</div><div class="rrow-b">Curate the org-wide sub-agent and slash command library. Review contributions, enforce quality, keep the catalog current with model and tool changes.</div></div>
+      <div class="rrow"><div class="rrow-t">Context engineering standards</div><div class="rrow-b">Author and maintain the MiracleSoft context engineering standard. Review project and personal instruction files. Elevate context from afterthought to engineering artifact.</div></div>
+      <div class="rrow"><div class="rrow-t">AI-readiness coaching</div><div class="rrow-b">Use the scorecard to identify coaching opportunities. Run 1:1s and small-group workshops. Help engineers move from AI-curious to AI-fluent.</div></div>
+      <div class="rrow"><div class="rrow-t">Guardrail and evaluation tooling</div><div class="rrow-b">Partner with platform engineering to build the enforcement layer: pre-commit hooks, CI checks, Plan PR templates, scaffolding CLI, evaluation harnesses for client-facing code.</div></div>
+      <div class="rrow"><div class="rrow-t">Delivery ledger curation</div><div class="rrow-b">Collect, verify, and publish AI-driven wins across accounts. Write the internal comms that turn individual shipping into org-wide knowledge.</div></div>
+      <div class="rrow"><div class="rrow-t">Cross-team bridge</div><div class="rrow-b">Translate field-level friction into roadmap input for miraAI and Rapid60. Partner with engineering, product, security, and account leadership.</div></div>
+      <div class="rrow"><div class="rrow-t">Hands-on technical contribution</div><div class="rrow-b">Write code. Review PRs. Debug production issues. Credibility in this role is earned in the work.</div></div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">What success looks like</div>
+      <h2 class="sect-title">Outcomes by milestone</h2>
+      <div class="ms"><div class="ms-t">First 90 days</div><div class="ms-b">Framework v1.0 published. Scaffolding CLI in use on at least one live engagement. First discovery session facilitated. Instruction files in the three highest-priority repositories.</div></div>
+      <div class="ms"><div class="ms-t">First 180 days</div><div class="ms-b">Majority of AI-driven engagement work begins with a Plan PR. Shared library has multiple production sub-agents. Delivery ledger on regular cadence. Scorecard visible to every engineering manager.</div></div>
+      <div class="ms"><div class="ms-t">First 12 months</div><div class="ms-b">Measurable token-to-value improvement across squads. Inbound AI-forward applicants cite the framework. Function ready to expand.</div></div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">What you bring</div>
+      <h2 class="sect-title">Required experience</h2>
+      <div class="rrow"><div class="rrow-t">Technical leadership</div><div class="rrow-b">Significant experience building and delivering production software systems. Comfortable leading through influence across squads and accounts.</div></div>
+      <div class="rrow"><div class="rrow-t">AI-native fluency</div><div class="rrow-b">Daily practitioner of modern AI development tools — Claude Code, Cursor, or equivalent. Built multi-agent systems. Hands-on experience with MCP servers, sub-agents, and tool interfaces.</div></div>
+      <div class="rrow"><div class="rrow-t">Platform and tooling instinct</div><div class="rrow-b">Can design and ship CI/CD guardrails, pre-commit hooks, scaffolding CLIs, and evaluation harnesses. JavaScript/TypeScript proficiency; polyglot tendencies valued.</div></div>
+      <div class="rrow"><div class="rrow-t">Evaluation discipline</div><div class="rrow-b">Understands how to evaluate AI output — unit evals, golden sets, LLM-as-judge, human review — and when each applies in client delivery contexts.</div></div>
+      <div class="rrow"><div class="rrow-t">Writing and coaching</div><div class="rrow-b">Can produce standards documentation, facilitate discovery sessions, and coach engineers across seniority levels.</div></div>
+      <div class="rrow"><div class="rrow-t">Services context</div><div class="rrow-b">Prior professional services, consulting, or solutions engineering experience. Understands utilization, bid dynamics, and client delivery pressure.</div></div>
+      <div class="rrow"><div class="rrow-t">Comfort with ambiguity</div><div class="rrow-b">You will define the function, the metrics, and the playbooks. No inherited manual.</div></div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">Preferred</div>
+      <h2 class="sect-title">Nice to have</h2>
+      <ul class="plist">
+        <li>Prior forward-deployed engineering, DevRel, or developer experience role</li>
+        <li>Built or scaled internal developer platforms or productivity tooling</li>
+        <li>Published technical writing, talks, or open-source contributions on AI engineering</li>
+        <li>Experience with SOC 2, ISO 27001, or HIPAA in AI delivery contexts</li>
+        <li>Familiarity with LLM observability, prompt versioning, or evaluation frameworks</li>
+      </ul>
+    </div>
+
+    <div class="sect">
+      <div class="sect-num">Why this role</div>
+      <h2 class="sect-title">Every pillar you ship lands in every engagement going forward</h2>
+      <div class="sect-intro"><p>Done well, this role pays for itself many times over — in delivery velocity, retained talent, lower compliance risk, and the quality of the engineering culture MiracleSoft builds for the next decade. Highly visible, direct access to senior leadership, real ownership from day one.</p></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="foot">
+  <span>Internal document · MiracleSoft Systems, Inc.</span>
+  <span>© 2026</span>
+</div>
+
+<script>
+document.querySelectorAll('.tn-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var t=btn.getAttribute('data-tab');
+    document.querySelectorAll('.tn-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+    btn.classList.add('active');
+    document.getElementById('tab-'+t).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+</script>
+
+</body>
+</html>
